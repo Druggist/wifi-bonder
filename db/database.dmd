@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="database" id="FC522599-521B-F97F-8AE3-E135D05E53E7" version="3.5">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-11-15 17:49:35 UTC</createdTime>
+<ownerDesignName>baza_sw</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>FC522599-521B-F97F-8AE3-E135D05E53E7</designId>
+</OSDM_Design>

@@ -1,0 +1,78 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="EA946F66-BF6E-C1F5-CE1F-C6CC75DC5E3C" name="User">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 22:51:38 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<preferredAbbreviation>Users</preferredAbbreviation>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Username" id="FFF8D521-4E85-BDC1-2049-C399B8F88BC4">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 22:51:48 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100 CHAR</dataTypeSize>
+<ownDataTypeParameters>100 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PasswordHash" id="E22E062E-A173-1B44-0B1F-4AF17DE8A9DA">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 22:52:02 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255 CHAR</dataTypeSize>
+<ownDataTypeParameters>255 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PasswordSalt" id="C5ED7BB0-E3A6-51C2-B610-22F7D5CFC01C">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 22:52:17 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32 CHAR</dataTypeSize>
+<ownDataTypeParameters>32 CHAR,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="69D376A9-B353-9FF1-E774-BE0990EE4080" name="User PK">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 22:52:01 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>FFF8D521-4E85-BDC1-2049-C399B8F88BC4</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,76 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="CD445DA6-F69E-ABDD-DEAE-DA7B9B49561A" name="Sessions">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>9E26E003-AA12-0155-40A7-08629927D545</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="SesisonId" id="0A0F3B24-04AF-8AAD-8BAB-846D668FA505">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>758F3A7B-0DFA-49C3-4052-88C5C62EECEB</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Data" id="311170AD-A12C-0825-7949-FD942659DDC7">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>479AA67A-82B8-0129-D099-659EE967DFE0</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255 CHAR</dataTypeSize>
+<ownDataTypeParameters>255 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Users_Username" id="577769C4-4E3D-6C8F-8708-E726D8C44841">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>15CD4498-9C7E-4003-15CD-5CFFBFA8ABAC</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100 CHAR</dataTypeSize>
+<ownDataTypeParameters>100 CHAR,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="696134B7-F444-A012-91F3-0C048401D109" referredColumn="B606DA7C-45EA-BE48-D113-29C39CBF4218"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="B2F46808-44FE-C34F-68B3-21EB63423DA9" name="Sessions_PK">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>51CC211C-AD6A-1C84-0571-99E848260BCD</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0A0F3B24-04AF-8AAD-8BAB-846D668FA505"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="4CC27442-0CAF-DAE8-A94B-5E542E643ACF" name="Sessions_Users_FK">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>17EF1910-186B-B186-153E-EF6BD12C0EB6</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="577769C4-4E3D-6C8F-8708-E726D8C44841"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

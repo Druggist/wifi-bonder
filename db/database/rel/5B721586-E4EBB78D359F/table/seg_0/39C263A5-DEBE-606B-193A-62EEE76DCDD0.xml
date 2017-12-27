@@ -1,0 +1,111 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="39C263A5-DEBE-606B-193A-62EEE76DCDD0" name="Pastes">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>D3BEC1B0-CA3A-8601-E471-9D6ACC794436</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="PasteId" id="85679E41-C4E4-CFEF-8D9B-0A80BBBB34D9">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>2A6B0BE4-70CF-D18A-079C-CF2B41B5C0A3</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Data" id="477252D5-6D16-7710-879D-564979BEB6CD">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>1038F723-8837-E2D1-5246-F6FF9187121E</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Title" id="C9B3117D-A49F-0272-58D9-3C742B2A4E97">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>061AD9FC-10CC-9E54-6E67-D15AFC2E06BA</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255 CHAR</dataTypeSize>
+<ownDataTypeParameters>255 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Timestamp" id="C36AF9DA-25D2-8DEA-B6D7-675F40D31844">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>6C28E118-603B-DD8A-7901-C5677C27F133</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Extended" id="4AE3C53D-990F-BE06-DE80-AF012970F219">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>F30FAFFB-73E5-D139-B2AD-3597DCDC117B</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1 BYTE</dataTypeSize>
+<ownDataTypeParameters>1 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Users_Username" id="276CB3FE-1E03-7B75-45FC-51B9FED9F4D7">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>D217A4AB-2B37-4321-4CFD-52F538AFD8DE</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100 CHAR</dataTypeSize>
+<ownDataTypeParameters>100 CHAR,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="045271A7-8139-9C9E-452B-19D835A8C072" referredColumn="B606DA7C-45EA-BE48-D113-29C39CBF4218"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="237F0DE2-18A9-34EA-4F51-B95C92365D91" name="Pastes_PK">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>8D37CB76-0910-F052-FF31-83738A8E40EC</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="85679E41-C4E4-CFEF-8D9B-0A80BBBB34D9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="4DD7B7E4-798A-3D93-5345-8BE38F7237CF" name="Pastes_Users_FK">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 23:05:11 UTC</createdTime>
+<generatorID>D79E556B-CD32-A2E7-E1FA-C150408F6D3E</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="276CB3FE-1E03-7B75-45FC-51B9FED9F4D7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

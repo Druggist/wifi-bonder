@@ -1,0 +1,77 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="4A823B5E-E265-6CE1-A84F-23BC1B8F8C85" name="In">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-17 17:19:04 UTC</createdTime>
+<generatorID>6556A88B-76D8-7EA7-8656-DA198FC5FF71</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="NetworkId" id="5007DDAD-29D5-5A13-A258-E2B478B15516">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-17 17:19:04 UTC</createdTime>
+<generatorID>D76CF652-72E2-8888-89E6-6C7B9A3BE9DA</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="761DCC09-D92F-1B22-40A7-D5E01940357E" referredColumn="BF9489F9-55C1-A8FF-F918-AE8D3CBE19FA"/>
+</associations>
+</Column>
+<Column name="NetworkGroups_NetworkGroupId" id="C334D83F-4993-56B3-3A05-FE0C796998A0">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-17 17:19:04 UTC</createdTime>
+<generatorID>38CC7EAB-672C-F1C9-5D4E-1DE0DC3D2C0E</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="57136213-69C0-078B-FBCC-AE9FE3E0D174" referredColumn="8A55A517-FDCB-8697-F0B3-435F87A6E8DE"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="EAE1C18D-57A8-D38E-CD97-9F9147B568B6" name="In_PK">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-17 17:19:04 UTC</createdTime>
+<generatorID>91A4C372-8C23-31A3-7C77-DE530BA1ACA8</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5007DDAD-29D5-5A13-A258-E2B478B15516"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CD87E412-1831-D6FC-DC2C-332352F12CAD" name="In_Networks_FK">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-17 17:19:04 UTC</createdTime>
+<generatorID>3DD5E689-2812-7EB2-D235-35C22337898C</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5007DDAD-29D5-5A13-A258-E2B478B15516"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B6079B41-ED22-2FAF-2DA3-33931C0A14B6" name="In_NetworkGroups_FK">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-17 17:19:04 UTC</createdTime>
+<generatorID>D0EEB3A7-DC8D-316C-8588-A649874BDFEF</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C334D83F-4993-56B3-3A05-FE0C796998A0"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

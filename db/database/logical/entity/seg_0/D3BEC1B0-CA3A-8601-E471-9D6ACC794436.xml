@@ -1,0 +1,120 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="D3BEC1B0-CA3A-8601-E471-9D6ACC794436" name="Paste">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-11-15 19:35:33 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<preferredAbbreviation>Pastes</preferredAbbreviation>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="PasteId" id="2A6B0BE4-70CF-D18A-079C-CF2B41B5C0A3">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-11-16 13:19:40 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Data" id="1038F723-8837-E2D1-5246-F6FF9187121E">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-11-16 13:20:07 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Title" id="061AD9FC-10CC-9E54-6E67-D15AFC2E06BA">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-11-16 13:19:56 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255 CHAR</dataTypeSize>
+<ownDataTypeParameters>255 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Timestamp" id="6C28E118-603B-DD8A-7901-C5677C27F133">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-17 17:13:54 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Extended" id="F30FAFFB-73E5-D139-B2AD-3597DCDC117B">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-17 17:25:11 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1 BYTE</dataTypeSize>
+<ownDataTypeParameters>1 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Username" id="D217A4AB-2B37-4321-4CFD-52F538AFD8DE">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-26 22:53:36 UTC</createdTime>
+<generatorID>D79E556B-CD32-A2E7-E1FA-C150408F6D3E</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<referedAttribute>FFF8D521-4E85-BDC1-2049-C399B8F88BC4</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100 CHAR</dataTypeSize>
+<ownDataTypeParameters>100 CHAR,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="8D37CB76-0910-F052-FF31-83738A8E40EC" name="ClientList PK">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-11-16 13:19:43 UTC</createdTime>
+<ownerDesignName>database</ownerDesignName>
+<engineerTo>
+<item key="31142CF5-86E2-0E58-CB41-AA8D64575ED2" value="true"/>
+<item key="5B721586-77DA-AA24-AFB3-E4EBB78D359F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>2A6B0BE4-70CF-D18A-079C-CF2B41B5C0A3</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

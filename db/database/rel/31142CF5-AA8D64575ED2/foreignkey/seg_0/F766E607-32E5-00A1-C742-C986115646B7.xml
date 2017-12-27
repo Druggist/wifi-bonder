@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="F766E607-32E5-00A1-C742-C986115646B7" containerWithKeyObject="C6C8F263-CD51-B061-1B91-8ACBD194928A" localFKIndex="F6399AD0-7A7A-26E0-0006-470B15878BE1" name="Out_Networks_FK">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-17 17:19:04 UTC</createdTime>
+<generatorID>77CD1E8E-5272-6A58-89E0-39A3321AC2F9</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<referredTableLongName>Networks</referredTableLongName>
+<arc>356880F8-5D2A-58BC-5D09-8E72B7A4668A</arc>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>FABE1086-8AB6-3388-A48D-EB181BDAAF92</referredTableID>
+<keyObject>7F794A47-5B95-1706-8388-F87E6CD6CBF9</keyObject>
+<referredKeyID>7F794A47-5B95-1706-8388-F87E6CD6CBF9</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>NetworkId</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

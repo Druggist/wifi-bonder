@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="914E4574-6DCA-FA35-DD81-FD880CB1E2D2" containerWithKeyObject="E56F0E0E-1C28-97F8-95C3-8329E4CDACB6" localFKIndex="C3DCB16A-4FD6-1545-7D9C-736C787402A7" name="BannedMacs_Configs_FK">
+<createdBy>mnajd</createdBy>
+<createdTime>2017-12-17 17:19:04 UTC</createdTime>
+<generatorID>F9FEC1F1-50FA-E00F-7A81-5CB5B61D9A93</generatorID>
+<ownerDesignName>database</ownerDesignName>
+<referredTableLongName>Configs</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>2DAF9092-094F-8295-5B05-17F52D4D79FD</referredTableID>
+<keyObject>05498872-26AB-F37D-9EC3-16451DA1BBE5</keyObject>
+<referredKeyID>05498872-26AB-F37D-9EC3-16451DA1BBE5</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ConfigId</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>
