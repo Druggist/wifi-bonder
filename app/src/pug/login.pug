@@ -1,0 +1,48 @@
+extends _template
+
+block php
+	:php
+		require_once 'core/init.php';
+
+		$messages = array();
+		$user = new User();
+
+		if($user->isLoggedIn()) {
+			Redirect::to('index.php');
+		}
+
+		if(Input::exists()) {
+			if(Token::check(Input::get('token'))) {   		  
+				$validate = new Validate();
+				$validation = $validate->check($_POST, array(
+					'email' => array(
+						'required' => true, 
+						'min' => 5,
+						'max' => 254, 
+						'type' => 'email'
+					),
+					'haslo' => array( 
+						'required' => true,
+						'min' => 4,
+						'max' => 50
+					)
+				));   		
+				if($validation->passed()) {						
+					$remember = (Input::get('rememberme') === 'on') ? true : false;
+					$login = $user->login(Input::get('email'), Input::get('haslo'), $remember);
+					if($login) {
+						Redirect::to('index.php');
+					} else {
+						array_push($messages, "Niepoprawne hasło lub email!");
+					}				
+				} else {
+					foreach($validation->errors() as $error) {
+						array_push($messages, $error);
+					}
+				}
+			} 
+			echo $message;
+		}
+
+block body
+	

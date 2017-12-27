@@ -1,0 +1,18 @@
+extends _template
+
+block php
+	:php
+		require_once 'core/init.php';
+
+		$messages = array();
+		$user = new User();
+
+		if(!$user->isLoggedIn()) {
+			Redirect::to('login.php');
+		}
+
+		if(Session::exists('success')) {
+			array_push($messages, Session::flash('success'));
+		}
+
+block body
