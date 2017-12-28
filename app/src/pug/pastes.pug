@@ -1,0 +1,76 @@
+extends _template
+
+block php
+	:php
+		require_once 'core/init.php';
+
+		$user = new User();
+
+		if(!$user->isLoggedIn()) {
+			Redirect::to('login.php');
+		}
+		$messages = array();
+		$db = DB::getInstance();
+
+		If(Input::exists()){	  
+			$validate = new Validate();
+			$validation = $validate->check($_POST, array(
+				'title' => array(
+					'required' => true, 
+					'min' => 2,
+					'max' => 100
+				),
+				'data' => array( 
+					'required' => true,
+					'min' => 0,
+					'max' => 1000
+				)
+			));   		
+			if($validation->passed()) {						
+				$data = Input::get('data');				
+				$title = Input::get('title');			
+				$flag = Input::get('flag');
+				if($flag!='') {
+					$flag='1';
+				} else {
+					$flag='0';
+				}
+				$userid = 3;//$user->data->userid;
+
+				if(!$db->insert('pastes', array(
+					'data' => $data,
+					'title' => $title,
+					'flag' => $flag,
+					'userid' => 3
+					))) {
+					die('Wystąpił problem z zapisywaniem danych!');
+				}		
+			} else {
+				foreach($validation->errors() as $error) {
+					array_push($messages, $error);
+				}
+			}
+		}
+		 
+		if($db->query("SELECT * FROM pastes ORDER BY `creationtime` DESC")->error()){
+		    die('Wystąpił problem z pobraniem danych!');
+		}
+		$results = $db->results();
+		print_r($messages);
+block body
+	.container
+		.row
+			.col.s12.m6.offset-m3
+				.card
+					.card-content.center
+						.card-title PASTY
+				.card
+					.card-content
+						.row
+							.col.s12.center
+								a(href='ajax/create_paste.php') Create new paste
+						:php
+							foreach($results as $result) {
+								echo "<a href=ajax/show_paste.php?id=".$result->pasteid.">".$result->title . " " . $result->creationtime . "</a><br>";
+							} 
+						
