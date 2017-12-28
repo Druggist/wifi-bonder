@@ -11,34 +11,34 @@ if(Input::exists()) {
 	if(Token::check(Input::get('token'))) {   		  
 		$validate = new Validate();
 		$validation = $validate->check($_POST, array(
-			'email' => array(
+			'username' => array(
 				'required' => true, 
-				'min' => 5,
-				'max' => 254, 
-				'type' => 'email'
+				'min' => 2,
+				'max' => 100
 			),
-			'haslo' => array( 
+			'pass' => array( 
 				'required' => true,
-				'min' => 4,
+				'min' => 6,
 				'max' => 50
 			)
 		));   		
 		if($validation->passed()) {						
 			$remember = (Input::get('rememberme') === 'on') ? true : false;
-			$login = $user->login(Input::get('email'), Input::get('haslo'), $remember);
-			if($login) {
+			$login = $user->login(Input::get('username'), Input::get('pass'), $remember);
+			if($login){
 				Redirect::to('index.php');
 			} else {
-				array_push($messages, "Niepoprawne hasło lub email!");
+				array_push($messages, "Wrong username or password!");
 			}				
 		} else {
 			foreach($validation->errors() as $error) {
 				array_push($messages, $error);
 			}
 		}
-	} 
-	echo $message;
+	}
 }
+
+
  ?><!DOCTYPE html>
 <html>
   <head>
@@ -53,5 +53,49 @@ if(Input::exists()) {
     <title>WiFi bonder app</title>
   </head>
   <body>
+    <div class="container">
+      <div class="row">
+        <div class="col s12 m6 offset-m3">
+          <div class="card">
+            <div class="card-content center">
+              <div class="card-title">LOG IN</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <form method="post">
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="username" type="text" name="username">
+                    <label for="username">Username</label>
+                  </div>
+                  <div class="input-field col s12">
+                    <input id="pass" type="password" name="pass">
+                    <label for="pass">Password</label>
+                  </div>
+                  <div class="col s12">
+                    <input id="rememberme" type="checkbox" name="rememberme">
+                    <label for="rememberme">Remember me</label>
+                  </div>
+                  <div class="col s12 center">
+                    <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
+                    <button class="btn waves-effect waves-light" type="submit">Log in</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="components/jquery/dist/jquery.min.js"></script>
+    <script src="components/materialize/dist/js/materialize.min.js"></script>
+    <script src="static/js/main.min.js"></script><?php if(!empty($messages)){
+	echo '<script type="text/javascript">';
+	foreach ($messages as $message) {
+		echo "Materialize.toast('{$message}', 4000);";
+	}
+	echo '</script>';
+} ?>
   </body>
 </html>

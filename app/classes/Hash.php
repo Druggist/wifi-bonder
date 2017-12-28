@@ -1,11 +1,11 @@
 <?php
 class Hash {
 	public static function make($string, $salt = '') {
-		return hash('sha256', $string.$salt);
+		return hash('sha256', $string.hex2bin($salt));
 	}
 
 	public static function salt($length) {
-		return mcrypt_create_iv($length, MCRYPT_DEV_RANDOM);
+		return bin2hex(random_bytes($length));
 	}
 	
 	public static function string($length) {

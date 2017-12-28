@@ -15,6 +15,7 @@ var gulp = require("gulp"),
 	pug = require('gulp-pug'),
 	pugPHPFilter = require('pug-php-filter'),
 	del = require("del"),
+	replace = require('gulp-replace'),
 	browserSync = require('browser-sync').create();
 
 //////////////////////////////////////////
@@ -107,6 +108,8 @@ gulp.task("compilePug", function (){
 				php: pugPHPFilter
 			}
 		}))
+		.pipe(replace('&lt;', '<'))
+		.pipe(replace('&gt;', '>'))
 		.pipe(rename({
 			extname: ".php"
 		}))

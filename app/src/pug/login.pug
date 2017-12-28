@@ -15,34 +15,68 @@ block php
 			if(Token::check(Input::get('token'))) {   		  
 				$validate = new Validate();
 				$validation = $validate->check($_POST, array(
-					'email' => array(
+					'username' => array(
 						'required' => true, 
-						'min' => 5,
-						'max' => 254, 
-						'type' => 'email'
+						'min' => 2,
+						'max' => 100
 					),
-					'haslo' => array( 
+					'pass' => array( 
 						'required' => true,
-						'min' => 4,
+						'min' => 6,
 						'max' => 50
 					)
 				));   		
 				if($validation->passed()) {						
 					$remember = (Input::get('rememberme') === 'on') ? true : false;
-					$login = $user->login(Input::get('email'), Input::get('haslo'), $remember);
-					if($login) {
+					$login = $user->login(Input::get('username'), Input::get('pass'), $remember);
+					if($login){
 						Redirect::to('index.php');
 					} else {
-						array_push($messages, "Niepoprawne hasło lub email!");
+						array_push($messages, "Wrong username or password!");
 					}				
 				} else {
 					foreach($validation->errors() as $error) {
 						array_push($messages, $error);
 					}
 				}
-			} 
-			echo $message;
+			}
 		}
 
+		
+
 block body
-	
+	.container
+		.row
+			.col.s12.m6.offset-m3
+				.card
+					.card-content.center
+						.card-title LOG IN
+				.card
+					.card-content
+						form(method="post")
+							.row
+								.input-field.col.s12
+									input#username(type="text", name="username")
+									label(for="username") Username
+								.input-field.col.s12
+									input#pass(type="password", name="pass")
+									label(for="pass") Password
+								.col.s12
+									input#rememberme(type="checkbox", name="rememberme")
+									label(for="rememberme") Remember me
+								.col.s12.center
+									input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
+									button.btn.waves-effect.waves-light(type="submit") Log in
+
+block script
+	script(src="components/jquery/dist/jquery.min.js")
+	script(src="components/materialize/dist/js/materialize.min.js")
+	script(src="static/js/main.min.js")
+	:php
+		if(!empty($messages)){
+			echo '<script type="text/javascript">';
+			foreach ($messages as $message) {
+				echo "Materialize.toast('{$message}', 4000);";
+			}
+			echo '</script>';
+		}
