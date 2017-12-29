@@ -1,0 +1,11 @@
+#add bond connection & interface
+nmcli con add type bond ifname bond0 bond.options "mode=balance-alb,miimon=100"
+
+#wifi connection list | set proper interfaces
+nmcli dev wifi list ifname INTERFACE
+
+# connect to wifi | set proper interfaces
+nmcli dev wifi connect SSID password PASS ifname INTERFACE
+
+# enslave connection1
+nmcli con modify CONNECTION_NAME master bond0 
