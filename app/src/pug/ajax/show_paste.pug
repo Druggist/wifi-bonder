@@ -31,19 +31,7 @@
 		}				
 	}
 	$result = $db->results()[0];
-div Title 
-:php
-	echo $result->title;
 
-div Text: 
-:php
-	echo $result->data;
-
-div Creation date: 
-:php
-	echo $result->creationtime;
-	
-div Created by: 
-:php
-	$user = new User($result->userid);
-	echo $user->data()->username;
+	echo "<h4>".$result->title."</h4>";
+	echo "<span>".$result->creationtime."</span>";
+	echo "<p>".$result->data."</p>";

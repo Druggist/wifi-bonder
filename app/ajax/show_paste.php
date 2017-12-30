@@ -29,12 +29,8 @@ if(Input::exists('get')){
 		}
 	}				
 }
-$result = $db->results()[0]; ?>
-<div>Title </div><?php echo $result->title;
- ?>
-<div>Text: </div><?php echo $result->data;
- ?>
-<div>Creation date: </div><?php echo $result->creationtime;
- ?>
-<div>Created by: </div><?php $user = new User($result->userid);
-echo $user->data()->username; ?>
+$result = $db->results()[0];
+
+echo "<h4>".$result->title."</h4>";
+echo "<span>".$result->creationtime."</span>";
+echo "<p>".$result->data."</p>"; ?>
