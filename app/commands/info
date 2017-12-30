@@ -1,5 +1,6 @@
 #add bond connection & interface
 nmcli con add type bond ifname bond0 bond.options "mode=balance-alb,miimon=100"
+ip addr add 192.168.100.100/24 dev bond0
 
 #wifi connection list | set proper interfaces
 nmcli dev wifi list ifname INTERFACE

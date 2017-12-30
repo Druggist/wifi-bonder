@@ -35,3 +35,4 @@ if [ "$tmp"  != "" ]
 fi
 
 nmcli dev wifi connect "$2" password "$3" ifname "$interface" name "$name"
+nmcli con modify "$name" master bond0 
