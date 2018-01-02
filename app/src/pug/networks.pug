@@ -1,0 +1,100 @@
+extends _template
+
+block php
+	:php
+		require_once 'core/init.php';
+
+		$messages = array();
+		$db = DB::getInstance();
+		$user = new User();	
+		// if(!$user->isLoggedIn()) {
+		// 	Redirect::to('login.php');
+		// }
+
+		if(Input::exists()) {
+			$validate = new Validate();
+			$validation = $validate->check($_POST, array(
+				'ssid' => array(
+					'required' => true
+				),
+				'iface' => array(
+					'required' => true
+				)));   		
+			if($validation->passed()) { 
+				echo Input::get('iface').'<br>';
+				echo Input::get('ssid').'<br>';
+				echo Input::get('password').'<br>';
+				echo 'dupa';
+				echo exec('commands/connect.sh '.Input::get('iface').' '.Input::get('ssid').' '.Input::get('password'));
+				echo 'koniec';
+			} else {
+				foreach($validation->errors() as $error) {
+					echo $error;
+				}
+			}
+		}
+block body
+	.container
+		.row
+			.col.s12.m12
+				.card
+					.card-content.center
+						.card-title NETWORKING
+			.col.s12.m6
+				.card
+					.card-content.center 
+						.card-title OUT
+						form(method="post")
+							.row
+								.input-field.col.s12
+									input#ssid(type="text", name="ssid")
+									label(for="ssid") Ssid
+								.input-field.col.s12
+									input#password(type="password", name="password")
+									label(for="password") Password
+								.col.s12.center
+									input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
+									button.btn.waves-effect.waves-light(type="submit") UPDATE
+			.col.s12.m6
+				.card
+					.card-content.center
+						.card-title IN
+						table.highlight
+							thead 
+								tr
+									th Inteface
+									th Ip
+									th Action
+							tbody
+								tr
+									td IFACE 1
+									td IP 1
+									td 
+										a.btn.modal-trigger(href="#show_networks", iface="in0") EDIT
+								tr
+									td IFACE 2
+									td IP 2
+									td 
+										a.btn.modal-trigger(href="#show_networks",  iface="in1") EDIT
+	.modal#show_networks
+		.modal-content#networks_content
+			h4 Available networks
+
+		.modal-footer
+			a.modal-action.modal-close.waves-effect.waves-light.btn-flat(href="#!") Close			
+
+
+block script 
+	script(src="components/jquery/dist/jquery.js")
+	script(src="components/materialize/dist/js/materialize.js")
+	script(src="static/js/networks.js")
+	:php
+		if(!empty($messages)){
+			echo '<script type="text/javascript">';
+			foreach ($messages as $message) {
+				echo "Materialize.toast('{$message}', 4000);";
+			}
+			echo '</script>';
+		}
+
+						

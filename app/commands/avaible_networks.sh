@@ -18,4 +18,4 @@ else
 	exit 0
 fi
 
-nmcli dev wifi list ifname "$interface" | awk -F'▂' '{if (NR!=1) {print $1}}' | awk -F'Infrastruktura.+b/s' '{print $2 $1}'
+nmcli -t -f ssid,signal,security dev wifi list ifname "$interface"
