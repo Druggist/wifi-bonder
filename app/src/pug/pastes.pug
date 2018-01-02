@@ -6,6 +6,7 @@ block php
 
 		$messages = array();
 		$db = DB::getInstance();
+		$user = new User();
 
 		If(Input::exists()){	
 			if(Token::check(Input::get('token'))) {     
@@ -31,7 +32,7 @@ block php
 					} else {
 						$flag='N';
 					}
-					$userid = 9;//$user->data->userid;
+					$userid = $user->data()->userid;
 					$date = date('Y-m-d H:i:s');
 					try {
 						if($db->insert('pastes', array(
@@ -93,7 +94,7 @@ block body
 						input#title(type="text", name="title")
 						label(for="title") Title
 					.input-field.col.s12
-						textarea.materialize-textarea#data
+						textarea.materialize-textarea#data(name="data")
 						label(for="data") Content
 					.col.s12
 						input#flag(type="checkbox", name="flag")

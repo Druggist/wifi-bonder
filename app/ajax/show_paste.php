@@ -12,7 +12,7 @@ if(Input::exists('get')){
 	$validate = new Validate();
 	$validation = $validate->check($_GET, array(
 		'id' => array(
-			'required' => true, 
+			'required' => true,
 			'type' => 'number'
 		)));   		
 	if($validation->passed()) {		

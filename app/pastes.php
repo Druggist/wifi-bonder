@@ -2,6 +2,7 @@
 
 $messages = array();
 $db = DB::getInstance();
+$user = new User();
 
 If(Input::exists()){	
 	if(Token::check(Input::get('token'))) {     
@@ -27,7 +28,7 @@ If(Input::exists()){
 			} else {
 				$flag='N';
 			}
-			$userid = 9;//$user->data->userid;
+			$userid = $user->data()->userid;
 			$date = date('Y-m-d H:i:s');
 			try {
 				if($db->insert('pastes', array(
@@ -105,7 +106,7 @@ $results = $db->results(); ?><!DOCTYPE html>
               <label for="title">Title</label>
             </div>
             <div class="input-field col s12">
-              <textarea class="materialize-textarea" id="data"></textarea>
+              <textarea class="materialize-textarea" id="data" name="data"></textarea>
               <label for="data">Content</label>
             </div>
             <div class="col s12">
