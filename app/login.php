@@ -45,6 +45,7 @@ if(Input::exists()) {
     <meta charset="utf-8">
     <link rel="icon" href="static/img/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="static/img/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="static/css/main.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="#{author}">
