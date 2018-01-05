@@ -33,7 +33,7 @@ if (Input::exists('get')) {
 	$signal = $pieces[1];
 	$ssid = $pieces[0];
 	echo '<tr><td>'.$ssid.'</td><td>'.$signal.'</td><td>'.$security.'</td>';
-	echo '<td><a class="btn" href="ajax/password.php?iface='.$_GET['iface'].'&ssid='.$ssid.'">Connect</a></td></tr>';
+	echo '<td><a class="btn modal-trigger" href="#connect" data-iface="GET IFACE" data-ssid="GET SSID">Connect</a></td></tr>';
 } ?>
   </tbody>
 </table>

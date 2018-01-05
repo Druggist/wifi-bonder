@@ -53,6 +53,37 @@ if(Input::exists()) {
         </div>
         <div class="col s12 m6">
           <div class="card">
+            <div class="card-content center">
+              <div class="card-title">IN</div>
+              <form method="post">
+                <div class="row">
+                  <div class="input-field col s12 m8">
+                    <select>
+                      <option value="" selected>New preset</option>
+                      <option value="1">Option 1</option>
+                      <option value="2">Option 2</option>
+                      <option value="3">Option 3</option>
+                    </select>
+                    <label>Load preset</label>
+                  </div>
+                  <div class="input-field col s12 m4"><a class="btn waves-effect waves-light" hre="#">Save</a></div>
+                </div>
+              </form>
+              <div class="row">
+                <div class="input-field col s12"><a class="modal-trigger" href="#show_networks" data-iface="in0">
+                    <input id="wl0" type="text" name="wl0" value="TEMP1" disabled>
+                    <label for="wl0">Interface 1</label></a></div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12"><a class="modal-trigger" href="#show_networks" data-iface="in0">
+                    <input id="wl1" type="text" name="wl1" value="TEMP2" disabled>
+                    <label for="wl1">Interface 2</label></a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col s12 m6">
+          <div class="card">
             <div class="card-content center"> 
               <div class="card-title">OUT</div>
               <form method="post">
@@ -74,39 +105,34 @@ if(Input::exists()) {
             </div>
           </div>
         </div>
-        <div class="col s12 m6">
-          <div class="card">
-            <div class="card-content center">
-              <div class="card-title">IN</div>
-              <table class="highlight">
-                <thead> 
-                  <tr>
-                    <th>Inteface</th>
-                    <th>Ip</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>IFACE 1</td>
-                    <td>IP 1</td>
-                    <td> <a class="btn modal-trigger" href="#show_networks" iface="in0">EDIT</a></td>
-                  </tr>
-                  <tr>
-                    <td>IFACE 2</td>
-                    <td>IP 2</td>
-                    <td> <a class="btn modal-trigger" href="#show_networks" iface="in1">EDIT</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
     <div class="modal" id="show_networks">
       <div class="modal-content" id="networks_content">
         <h4>Available networks</h4>
+      </div>
+      <div class="modal-footer"><a class="modal-action modal-close waves-effect waves-light btn-flat" href="#!">Close	</a></div>
+    </div>
+    <div class="modal modal-pass" id="connect">
+      <div class="modal-content">
+        <h4>Connect</h4>
+        <form method="post">
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="connect_ssid" type="text" name="connect_ssid" value="temp" disabled>
+              <input id="connect_iface" type="hidden" name="connect_iface">
+              <label for="connect_ssid">SSID</label>
+            </div>
+            <div class="input-field col s12">
+              <input id="pass" type="password" name="connect_pass">
+              <label for="connect_pass">Password</label>
+            </div>
+            <div class="col s12 center">
+              <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
+              <button class="btn waves-effect waves-light" type="submit">Connect</button>
+            </div>
+          </div>
+        </form>
       </div>
       <div class="modal-footer"><a class="modal-action modal-close waves-effect waves-light btn-flat" href="#!">Close			</a></div>
     </div>

@@ -42,6 +42,34 @@ block body
 						.card-title NETWORKING
 			.col.s12.m6
 				.card
+					.card-content.center
+						.card-title IN
+						form(method="post")
+							.row
+								
+									.input-field.col.s12.m8
+										select
+											option(value="", selected) New preset
+											option(value="1") Option 1
+											option(value="2") Option 2
+											option(value="3") Option 3
+										label Load preset
+	
+									.input-field.col.s12.m4
+										a.btn.waves-effect.waves-light(hre="#") Save
+
+						.row
+							.input-field.col.s12
+								a.modal-trigger(href="#show_networks", data-iface="in0")
+									input#wl0(type="text", name="wl0", value="TEMP1", disabled)
+									label(for="wl0") Interface 1
+						.row
+							.input-field.col.s12
+								a.modal-trigger(href="#show_networks", data-iface="in0")
+									input#wl1(type="text", name="wl1", value="TEMP2", disabled)
+									label(for="wl1") Interface 2
+			.col.s12.m6
+				.card
 					.card-content.center 
 						.card-title OUT
 						form(method="post")
@@ -55,30 +83,29 @@ block body
 								.col.s12.center
 									input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
 									button.btn.waves-effect.waves-light(type="submit") UPDATE
-			.col.s12.m6
-				.card
-					.card-content.center
-						.card-title IN
-						table.highlight
-							thead 
-								tr
-									th Inteface
-									th Ip
-									th Action
-							tbody
-								tr
-									td IFACE 1
-									td IP 1
-									td 
-										a.btn.modal-trigger(href="#show_networks", iface="in0") EDIT
-								tr
-									td IFACE 2
-									td IP 2
-									td 
-										a.btn.modal-trigger(href="#show_networks",  iface="in1") EDIT
+
 	.modal#show_networks
 		.modal-content#networks_content
 			h4 Available networks
+
+		.modal-footer
+			a.modal-action.modal-close.waves-effect.waves-light.btn-flat(href="#!") Close	
+
+	.modal.modal-pass#connect
+		.modal-content
+			h4 Connect
+			form(method="post")
+				.row
+					.input-field.col.s12
+						input#connect_ssid(type="text", name="connect_ssid", value="temp", disabled)
+						input#connect_iface(type="hidden", name="connect_iface")
+						label(for="connect_ssid") SSID
+					.input-field.col.s12
+						input#pass(type="password", name="connect_pass")
+						label(for="connect_pass") Password
+					.col.s12.center
+						input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
+						button.btn.waves-effect.waves-light(type="submit") Connect
 
 		.modal-footer
 			a.modal-action.modal-close.waves-effect.waves-light.btn-flat(href="#!") Close			
