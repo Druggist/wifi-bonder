@@ -66,7 +66,8 @@ if(Input::exists()) {
                     </select>
                     <label>Load preset</label>
                   </div>
-                  <div class="input-field col s12 m4"><a class="btn waves-effect waves-light" hre="#">Save</a></div>
+                  <div class="input-field col s12 m4"><a class="btn waves-effect waves-light" href="#">Set</a></div>
+                  <div class="input-field col s12"><a class="btn waves-effect waves-light modal-trigger" href="#create_preset">Save</a></div>
                 </div>
               </form>
               <div class="row">
@@ -130,6 +131,24 @@ if(Input::exists()) {
             <div class="col s12 center">
               <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
               <button class="btn waves-effect waves-light" type="submit">Connect</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer"><a class="modal-action modal-close waves-effect waves-light btn-flat" href="#!">Close		</a></div>
+    </div>
+    <div class="modal" id="create_preset">
+      <div class="modal-content">
+        <h4>Save preset</h4>
+        <form method="post">
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="preset_name" type="text" name="preset_name">
+              <label for="preset_name">Name</label>
+            </div>
+            <div class="col s12 center">
+              <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
+              <button class="btn waves-effect waves-light" type="submit">Save</button>
             </div>
           </div>
         </form>

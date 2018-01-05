@@ -56,7 +56,9 @@ block body
 										label Load preset
 	
 									.input-field.col.s12.m4
-										a.btn.waves-effect.waves-light(hre="#") Save
+										a.btn.waves-effect.waves-light(href="#") Set
+									.input-field.col.s12
+										a.btn.waves-effect.waves-light.modal-trigger(href="#create_preset") Save
 
 						.row
 							.input-field.col.s12
@@ -106,6 +108,21 @@ block body
 					.col.s12.center
 						input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
 						button.btn.waves-effect.waves-light(type="submit") Connect
+
+		.modal-footer
+			a.modal-action.modal-close.waves-effect.waves-light.btn-flat(href="#!") Close		
+
+	.modal#create_preset
+		.modal-content
+			h4 Save preset
+			form(method="post")
+				.row
+					.input-field.col.s12
+						input#preset_name(type="text", name="preset_name")
+						label(for="preset_name") Name
+					.col.s12.center
+						input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
+						button.btn.waves-effect.waves-light(type="submit") Save
 
 		.modal-footer
 			a.modal-action.modal-close.waves-effect.waves-light.btn-flat(href="#!") Close			
