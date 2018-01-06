@@ -9,7 +9,7 @@ $("a[href='#show_networks']").click(function(){
 
 		$("a[href='#connect']").click(function(){
 			$("#connect_iface").val($(this).attr("data-iface"));
-			$("#connect_ssid").val("sadasdasd");
+			$("#connect_ssid").val($(this).attr("data-ssid"));
 		});
 	});
 });

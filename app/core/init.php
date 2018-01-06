@@ -4,7 +4,7 @@ $GLOBALS['config'] = array(
     'mysql' => array(
         'host' => '127.0.0.1',
         'username' => 'root',
-        'password' => 'zaq12wsx',
+        'password' => 'password',
         'db' => 'bonder',
 	    'port' => '3306'
 	),

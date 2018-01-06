@@ -3,9 +3,14 @@
 $messages = array();
 $db = DB::getInstance();
 $user = new User();	
-// if(!$user->isLoggedIn()) {
-// 	Redirect::to('login.php');
-// }
+if(!$user->isLoggedIn()) {
+	Redirect::to('login.php');
+}
+
+if ($db->query('SELECT * FROM configs WHERE userid='.$user->data()->userid)->error()) {
+	die('Failed to get users config!');
+}
+$userConfig = $db->results()[0];
 
 if(Input::exists()) {
 	$validate = new Validate();
@@ -15,19 +20,65 @@ if(Input::exists()) {
 		),
 		'iface' => array(
 			'required' => true
-		)));   		
+		)));
 	if($validation->passed()) { 
-		echo Input::get('iface').'<br>';
-		echo Input::get('ssid').'<br>';
-		echo Input::get('password').'<br>';
-		echo 'dupa';
-		echo exec('commands/connect.sh '.Input::get('iface').' '.Input::get('ssid').' '.Input::get('password'));
-		echo 'koniec';
+		exec('sudo commands/connect.sh "'.Input::get('iface').'" "'.Input::get('ssid').'" "'.Input::get('pass').'"', $out, $res);
+		if($res == 0) {
+			if ($userConfig->networkgroupid != null) {
+				exec('commands/get_ssid.sh '.Input::get('iface'), $old_ssid);
+				if($old_ssid[0] != "") {
+					if ($db->query('DELETE FROM `networks` WHERE `ssid`="'.$old_ssid[0].'" AND `networkgroupid`='.$userConfig->networkgroupid.' LIMIT 1')->error()){
+						die("Could not delete old connection!");
+					}
+				}
+				if ($db->query('INSERT INTO `networks` (`ssid`, `password`, `type`, `networkgroupid`) VALUES ("'.Input::get('ssid').'", "'.Input::get('pass').'", "I", '.$userConfig->networkgroupid.')')->error()) {
+					die("cannot insert network to database");
+				}
+			}
+			array_push($messages, "Connected to ".Input::get('ssid')." on interface ".Input::get('iface'));
+		} else {
+			array_push($messages, "Could not connect to ".Input::get('ssid'));
+		}
 	} else {
 		foreach($validation->errors() as $error) {
 			echo $error;
 		}
 	}
+}
+
+if ($db->query('SELECT * FROM networks WHERE networkid='.$userConfig->networkid)->error()) {
+	die('Failed to get user output network!');
+}
+$outputNetwork = $db->results()[0];
+
+if ($db->query('SELECT * FROM networkgroups WHERE userid='.$user->data()->userid)->error()) {
+	die('Failed to fetch user saved network groups!');
+}
+$networkGroups = $db->results();
+
+exec("./commands/get_ssid.sh in0", $ssid);
+exec("./commands/get_ssid.sh in1", $ssid);
+
+$inputNetworks = array();
+if($userConfig->networkgroupid != null) {
+	echo "NOT NULL";
+	if ($db->query('SELECT * FROM networks WHERE networkgroupid='.$userConfig->networkgroupid.' AND type="I"')->error()) {
+		die('Failed to fetch user input networks!');
+	}
+	foreach($db->results() as $network) {
+		if(in_array($network->ssid, $ssid)) {
+			array_push($inputNetworks, $network);
+		}
+	}
+	if(count($inputNetworks) < $db->count()) {
+		if($db->query("UPDATE configs SET networkgroupid=null WHERE userid=".$user->data()->userid)->error()) {
+			die('Failed to update user config!');
+		}
+		$userConfig->networkgroupid=null;
+		echo 'NULL';
+	}
+} else {
+	echo "NULL";
 } ?><!DOCTYPE html>
 <html>
   <head>
@@ -55,29 +106,34 @@ if(Input::exists()) {
           <div class="card">
             <div class="card-content center">
               <div class="card-title">IN</div>
-              <form method="post">
+              <form method="get" action="ajax/change_networkgroup.php">
                 <div class="row">
                   <div class="input-field col s12 m8">
-                    <select>
-                      <option value="" selected>New preset</option>
-                      <option value="1">Option 1</option>
-                      <option value="2">Option 2</option>
-                      <option value="3">Option 3</option>
+                    <select id="network_groups" name="networkgroupid"><?php echo '<option value="none"></option>';
+foreach($networkGroups as $group) {
+	if ($group->networkgroupid == $userConfig->networkgroupid) {
+		echo '<option value="'.$group->networkgroupid.'" selected>'.$group->name.'</option>';	
+	} else {
+		echo '<option value="'.$group->networkgroupid.'">'.$group->name.'</option>';
+	}
+} ?>
                     </select>
                     <label>Load preset</label>
                   </div>
-                  <div class="input-field col s12 m4"><a class="btn waves-effect waves-light" href="#">Set</a></div>
-                  <div class="input-field col s12"><a class="btn waves-effect waves-light modal-trigger" href="#create_preset">Save</a></div>
+                  <div class="input-field col s12 m4">
+                    <button class="btn waves-effect waves-light" type="submit">Load</button>
+                  </div>
+                  <div class="input-field col s12"><a class="btn waves-effect waves-light modal-trigger" href="#create_preset">New</a></div>
                 </div>
               </form>
               <div class="row">
                 <div class="input-field col s12"><a class="modal-trigger" href="#show_networks" data-iface="in0">
-                    <input id="wl0" type="text" name="wl0" value="TEMP1" disabled>
-                    <label for="wl0">Interface 1</label></a></div>
+                    <input id="in0" type="text" name="in0" value="<?php echo $ssid[0]; ?>" disabled>
+                    <label for="in0">Interface 1</label></a></div>
               </div>
               <div class="row">
-                <div class="input-field col s12"><a class="modal-trigger" href="#show_networks" data-iface="in0">
-                    <input id="wl1" type="text" name="wl1" value="TEMP2" disabled>
+                <div class="input-field col s12"><a class="modal-trigger" href="#show_networks" data-iface="in1">
+                    <input id="in1" type="text" name="in1" value="<?php echo $ssid[1]; ?>" disabled>
                     <label for="wl1">Interface 2</label></a></div>
               </div>
             </div>
@@ -90,11 +146,11 @@ if(Input::exists()) {
               <form method="post">
                 <div class="row">
                   <div class="input-field col s12">
-                    <input id="ssid" type="text" name="ssid">
+                    <input id="ssid" type="text" name="ssid" value="<?php echo $outputNetwork->ssid; ?>">
                     <label for="ssid">Ssid</label>
                   </div>
                   <div class="input-field col s12">
-                    <input id="password" type="password" name="password">
+                    <input id="password" type="password" name="password" value="<?php echo $outputNetwork->password; ?>">
                     <label for="password">Password</label>
                   </div>
                   <div class="col s12 center">
@@ -120,12 +176,12 @@ if(Input::exists()) {
         <form method="post">
           <div class="row">
             <div class="input-field col s12">
-              <input id="connect_ssid" type="text" name="connect_ssid" value="temp" disabled>
-              <input id="connect_iface" type="hidden" name="connect_iface">
+              <input id="connect_ssid" type="text" name="ssid">
+              <input id="connect_iface" type="text" name="iface">
               <label for="connect_ssid">SSID</label>
             </div>
             <div class="input-field col s12">
-              <input id="pass" type="password" name="connect_pass">
+              <input id="pass" type="password" name="pass">
               <label for="connect_pass">Password</label>
             </div>
             <div class="col s12 center">
@@ -140,7 +196,7 @@ if(Input::exists()) {
     <div class="modal" id="create_preset">
       <div class="modal-content">
         <h4>Save preset</h4>
-        <form method="post">
+        <form method="post" action="ajax/create_preset.php">
           <div class="row">
             <div class="input-field col s12">
               <input id="preset_name" type="text" name="preset_name">
