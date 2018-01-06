@@ -1,0 +1,100 @@
+extends _template
+
+block php
+	:php
+		require_once 'core/init.php';
+
+		$messages = array();
+		$user = new User();
+
+		if(!$user->isLoggedIn()) {
+			Redirect::to('login.php');
+		}
+
+block body
+	include _navbar
+
+	.container
+		.row
+			.col.s12
+				.card
+					.card-content.center
+						.card-title Performance
+			.col.s12
+				.card
+					.card-content.no-spaces
+						.card-title.center Tests
+						form(method="post")
+							.row.no-spaces
+								.input-field.col.s12.m6.l4.offset-m3.offset-l4
+										select
+											option(value="", selected, disabled)
+											option(value="1") SSID 1
+											option(value="2") SSID 2
+											option(value="3") SSID 3
+										label Select network
+					ul.collapsible(data-collapsible="accordion")
+						li
+							.collapsible-header
+								span 2017-04-02 13:02:20
+							.collapsible-body
+								.wifi.row
+									.performance.col.s6
+										.title Download
+										| 126 kb/s
+									.performance.col.s6
+										.title Upload
+										| 126 kb/s
+						li
+							.collapsible-header
+								span 2017-04-02 13:02:20
+							.collapsible-body
+								.wifi.row
+									.performance.col.s6
+										.title Download
+										| 126 kb/s
+									.performance.col.s6
+										.title Upload
+										| 126 kb/s
+						li
+							.collapsible-header
+								span 2017-04-02 13:02:20
+							.collapsible-body
+								.wifi.row
+									.performance.col.s6
+										.title Download
+										| 126 kb/s
+									.performance.col.s6
+										.title Upload
+										| 126 kb/s
+			.col.s12
+				.card
+					.card-content
+						.card-title.center New test
+							form(method="post")
+								.row
+									.input-field.col.s12.m4.offset-m3.right-align
+										select
+											option(value="", selected, disabled)
+											option(value="1") In1
+											option(value="2") In2
+											option(value="3") Out
+										label Select network
+		
+									.input-field.col.s12.m4.left-align
+										a.btn.waves-effect.waves-light(href="#") Test
+							.wifi.row
+									.performance.col.s6
+										.title Download
+										| 126 kb/s
+									.performance.col.s6
+										.title Upload
+										| 126 kb/s
+						
+
+
+block script
+	script(src="components/jquery/dist/jquery.min.js")
+	script(src="components/materialize/dist/js/materialize.min.js")
+	script(src="static/js/main.min.js")
+	script(src="static/js/performance.min.js")

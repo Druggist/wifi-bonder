@@ -41,7 +41,7 @@ if(!$user->isLoggedIn()) {
         <div class="col s12">
           <div class="card">
             <div class="card-content center">
-              <div class="card-title">Hub</div>
+              <div class="card-title">Logs</div>
             </div>
           </div>
         </div>

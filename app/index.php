@@ -53,7 +53,7 @@ if(Session::exists('success')) {
           <div class="card">
             <div class="card-content">
               <div class="card-title center">IN</div>
-              <div class="wifi">
+              <div class="wifi row">
                 <div class="ssid center col s12">TEMP</div>
                 <div class="performance col s6">
                   <div class="title">Download</div>126 kb/s
