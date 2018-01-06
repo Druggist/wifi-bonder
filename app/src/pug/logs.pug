@@ -1,0 +1,50 @@
+extends _template
+
+block php
+	:php
+		require_once 'core/init.php';
+
+		$messages = array();
+		$user = new User();
+
+		if(!$user->isLoggedIn()) {
+			Redirect::to('login.php');
+		}
+
+block body
+	include _navbar
+
+	.container
+		.row
+			.col.s12
+				.card
+					.card-content.center
+						.card-title Logs
+			.col.s12
+				ul.collapsible.card(data-collapsible="accordion")
+					li
+						.collapsible-header.error
+							i.material-icons error
+							span 2017-04-02 13:02:20
+						.collapsible-body
+							span Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					li
+						.collapsible-header.warning
+							i.material-icons warning
+							span 2017-04-02 13:02:20
+						.collapsible-body
+							span Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					li
+						.collapsible-header.info
+							i.material-icons info
+							span 2017-04-02 13:02:20
+						.collapsible-body
+							span Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						
+
+
+block script
+	script(src="components/jquery/dist/jquery.min.js")
+	script(src="components/materialize/dist/js/materialize.min.js")
+	script(src="static/js/main.min.js")
+	script(src="static/js/logs.min.js")
