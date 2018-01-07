@@ -43,7 +43,16 @@ block body
 			.col.s12.m6
 				.card
 					.card-content
-						.card-title.center Banned MACs
+						.card-title.center Allowed MACs
+						.row
+							.col.s12.center
+								.switch
+									label
+										| Off
+										input(type="checkbox", checked)
+										span.lever
+										| On
+
 						ul.collection
 							li.collection-item
 								.connected 23:23:34:ff:02:4d
@@ -60,7 +69,7 @@ block body
 			.col.s12.m6
 				.card
 					.card-content
-						.card-title.center Ban device
+						.card-title.center Allow device
 						form(method="post")
 							.row
 								.input-field.col.s12
