@@ -62,6 +62,41 @@ block php
 				}
 			}
 		}
+
+		if ($db->query('SELECT `networkgroupid`, `networkid` FROM `configs` WHERE userid='.$user->data()->userid)->error()){
+			die('Failed to fetch user config!');
+		}
+		$userConfig = $db->results()[0];
+
+		$inputNetworks = array();
+		if ($userConfig->networkgroupid != null) {
+			if ($db->query('SELECT `networkid`, `ssid` FROM `networks` WHERE `networkgroupid`='.$userConfig->networkgroupid.' AND `type`="I"')->error()) {
+				die('Failed to fetch input networks!');
+			}
+			$inputNetworks = $db->results();
+		}
+		for ($i = 0; $i<count($inputNetworks); $i++) {
+			if ($db->query('SELECT * FROM `performances` WHERE `networkid`='.$inputNetworks[$i]->networkid.' ORDER BY `testdate` DESC LIMIT 1')->error()) {
+				die('Failed to fetch network performance!');
+			}
+			if ($db->count() > 0) {
+				$inputNetworks[$i]->uploadspeed = $db->results()[0]->uploadspeed;
+				$inputNetworks[$i]->downloadspeed = $db->results()[0]->downloadspeed;
+			}
+		}
+
+		if ($db->query('SELECT `networkid`, `ssid`, `password` FROM `networks` WHERE `networkid`='.$userConfig->networkid.' AND `type`="O"')->error()) {
+			die('Failed to fetch output networks!');
+		}
+		$outputNetwork=$db->results()[0];
+		if ($db->query('SELECT * FROM `performances` WHERE `networkid`='.$outputNetwork->networkid.' ORDER BY `testdate` DESC LIMIT 1')->error()) {
+			die('Failed to fetch network performance!');
+		}
+		if ($db->count() > 0) {
+			$outputNetwork->uploadspeed = $db->results()[0]->uploadspeed;
+			$outputNetwork->downloadspeed = $db->results()[0]->downloadspeed;
+		}
+
 		foreach($messages as $error) 
 		echo $error
 
@@ -79,21 +114,47 @@ block body
 					.card-content
 						.card-title.center IN
 						.wifi.row
-							.ssid.center.col.s12 TEMP
+							.ssid.center.col.s12 
+								:php
+									if(count($inputNetworks) > 0)
+										echo $inputNetworks[0]->ssid; 
 							.performance.col.s6
-								.title Download
-								| 126 kb/s
+								.title 
+									:php
+										if(count($inputNetworks) > 0) {
+											if (property_exists($inputNetworks[0], 'downloadspeed')) {
+												echo 'Download | '.$inputNetworks[0]->downloadspeed.' kb/s';
+											}
+										}
 							.performance.col.s6
-								.title Upload
-								| 126 kb/s
+								.title 
+									:php
+										if(count($inputNetworks) > 0) {
+											if (property_exists($inputNetworks[0], 'uploadspeed')) {
+												echo 'Upload | '.$inputNetworks[0]->uploadspeed.' kb/s';
+											}
+										}
 						.wifi.row
-							.ssid.center.col.s12 TEMP
+							.ssid.center.col.s12 
+								:php
+									if(count($inputNetworks) > 1)
+										echo $inputNetworks[1]->ssid;
 							.performance.col.s6
-								.title Download
-								| 126 kb/s
+								.title 
+									:php
+										if(count($inputNetworks) > 1) {
+											if (property_exists($inputNetworks[1], 'downloadspeed')) {
+												echo 'Download | '.$inputNetworks[1]->downloadspeed.' kb/s';
+											}
+										}
 							.performance.col.s6
-								.title Upload
-								| 126 kb/s
+								.title 
+									:php
+										if(count($inputNetworks) > 1) {
+											if (property_exists($inputNetworks[1], 'uploadspeed')) {
+												echo 'Upload | '.$inputNetworks[1]->uploadspeed.' kb/s';
+											}
+										}
 			.col.s12.m6
 				.card
 					.card-content
@@ -101,21 +162,31 @@ block body
 						.wifi.row
 							.ssid.center.col.s12 
 								:php
-									echo "temp";
+									echo $outputNetwork->ssid;
 							.pass.center.col.s12 Password: 
 								span 
 									:php
-										echo "4sdr24";
+										echo $outputNetwork->password;
 							.devices.col.s12 Connected devices:
 								span 
 									:php
 										echo exec('sudo commands/get_connected.sh -n');
 							.performance.col.s6
-								.title Download
-								| 126 kb/s
+								.title 
+									:php
+										if(count($inputNetworks) > 1) {
+											if (property_exists($inputNetworks[1], 'uploadspeed')) {
+												echo 'Upload | '.$inputNetworks[1]->uploadspeed.' kb/s';
+											}
+										}
 							.performance.col.s6
-								.title Upload
-								| 126 kb/s
+								.title 
+									:php
+										if(count($inputNetworks) > 1) {
+											if (property_exists($inputNetworks[1], 'downloadspeed')) {
+												echo 'Download | '.$inputNetworks[1]->downloadspeed.' kb/s';
+											}
+										}
 			.col.s12
 				.card
 					.card-content
