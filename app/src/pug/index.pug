@@ -16,3 +16,88 @@ block php
 		}
 
 block body
+	include _navbar
+
+	.container
+		.row
+			.col.s12
+				.card
+					.card-content.center
+						.card-title Hub
+			.col.s12.m6
+				.card
+					.card-content
+						.card-title.center IN
+						.wifi.row
+							.ssid.center.col.s12 TEMP
+							.performance.col.s6
+								.title Download
+								| 126 kb/s
+							.performance.col.s6
+								.title Upload
+								| 126 kb/s
+						.wifi.row
+							.ssid.center.col.s12 TEMP
+							.performance.col.s6
+								.title Download
+								| 126 kb/s
+							.performance.col.s6
+								.title Upload
+								| 126 kb/s
+			.col.s12.m6
+				.card
+					.card-content
+						.card-title.center OUT
+						.wifi.row
+							.ssid.center.col.s12 TEMP
+							.pass.center.col.s12 Password: 
+								span $sfaewfg!3
+							.devices.col.s12 Connected devices:
+								span 6
+							.performance.col.s6
+								.title Download
+								| 126 kb/s
+							.performance.col.s6
+								.title Upload
+								| 126 kb/s
+			.col.s12
+				.card
+					.card-content
+						.card-title.center User
+						.user.center
+							.name Duda
+							.group Admin
+							.joined Joined:
+								span 20-03-1993 12:32:02
+							.row
+								.col.s12.m6
+									a.btn.waves-effect.waves-light.modal-trigger(href="#changepass") Change password 
+								.col.s12.m6
+									a.btn.waves-effect.waves-light(href="logout.php") Log out
+
+	.modal#changepass
+		.modal-content
+			h4 Change password
+			form(method="post")
+				.row
+					.input-field.col.s12
+						input#oldpass(type="password", name="oldpass")
+						label(for="oldpass") Old password
+					.input-field.col.s12
+						input#newpass(type="password", name="newpass")
+						label(for="newpass") Password
+					.input-field.col.s12
+						input#repass(type="password", name="repass")
+						label(for="repass") Confirm password
+					.col.s12.center
+						input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
+						button.btn.waves-effect.waves-light(type="submit") Change
+
+		.modal-footer
+			a.modal-action.modal-close.waves-effect.waves-light.btn-flat(href="#!") Close		
+
+block script
+	script(src="components/jquery/dist/jquery.min.js")
+	script(src="components/materialize/dist/js/materialize.min.js")
+	script(src="static/js/main.min.js")
+	script(src="static/js/index.min.js")

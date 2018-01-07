@@ -7,4 +7,64 @@ body
 	height: 100%
 	max-width: 100%
 	overflow-x: hidden
-	background-color: color("blue", "base")
+	background-color: color("blue", "base")  
+
+.menu
+	position: fixed
+	top: 10px
+	left: 10px
+
+	i
+		color: color("blue", "base")!important 
+
+.wifi,
+.user
+	color: color("grey", "darken-2")
+	text-align: center
+
+	.ssid,
+	.name
+		margin-top: 15px
+		color: color("grey", "darken-3")
+		font-size: 1.5em
+
+	.pass,
+	.devices,
+	.joined
+		margin: 15px 0
+
+		span 
+			margin-left: 5px
+
+	.pass,
+	.group
+		font-size: 1.1em
+		color: color("grey", "darken-3")
+		margin-bottom: 0
+
+	.joined
+		margin-bottom: 30px
+
+.collapsible
+	.error
+		color: color("red", "darken-3")
+	
+	.warning
+		color: color("amber", "darken-4")
+	
+	.info
+		color: color("green", "darken-3")
+
+.connected
+	span
+		display: inline-block
+		padding: 0 10px
+		width: 33.3%
+
+	a 
+		color: color("red", "darken-3")
+
+.no-spaces
+	margin-bottom: 0!important
+	padding-bottom: 0!important 
+

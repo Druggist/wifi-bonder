@@ -1,0 +1,76 @@
+extends _template
+
+block php
+	:php
+		require_once 'core/init.php';
+
+		$messages = array();
+		$user = new User();
+
+		if(!$user->isLoggedIn()) {
+			Redirect::to('login.php');
+		}
+
+block body
+	include _navbar
+
+	.container
+		.row
+			.col.s12
+				.card
+					.card-content.center
+						.card-title DHCP
+			.col.s12
+				.card
+					.card-content
+						.card-title.center Connected devices
+						ul.collection
+							li.collection-item
+								.connected
+									span TEMP_COMPUTER
+									span 23:23:34:ff:02:4d
+									span 192.168.1.1
+							li.collection-item
+								.connected
+									span TEMP_COMPUTER
+									span 23:23:34:ff:02:4d
+									span 192.168.1.1
+							li.collection-item
+								.connected
+									span TEMP_COMPUTER
+									span 23:23:34:ff:02:4d
+									span 192.168.1.1
+			.col.s12.m6
+				.card
+					.card-content
+						.card-title.center Banned MACs
+						ul.collection
+							li.collection-item
+								.connected 23:23:34:ff:02:4d
+									a.secondary-content(href="#!")
+										i.material-icons clear
+							li.collection-item
+								.connected 23:23:34:ff:02:4d
+									a.secondary-content(href="#!")
+										i.material-icons clear
+							li.collection-item
+								.connected 23:23:34:ff:02:4d
+									a.secondary-content(href="#!")
+										i.material-icons clear
+			.col.s12.m6
+				.card
+					.card-content
+						.card-title.center Ban device
+						form(method="post")
+							.row
+								.input-field.col.s12
+									input#mac(type="text", name="mac")
+									label(for="mac") MAC
+								.col.s12.center
+									input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
+									button.btn.waves-effect.waves-light(type="submit") Ban
+
+block script
+	script(src="components/jquery/dist/jquery.min.js")
+	script(src="components/materialize/dist/js/materialize.min.js")
+	script(src="static/js/main.min.js")
