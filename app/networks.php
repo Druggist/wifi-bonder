@@ -22,10 +22,10 @@ if(Input::exists()) {
 			'required' => true
 		)));
 	if($validation->passed()) { 
+		exec('commands/get_ssid.sh '.Input::get('iface'), $old_ssid);
 		exec('sudo commands/connect.sh "'.Input::get('iface').'" "'.Input::get('ssid').'" "'.Input::get('pass').'"', $out, $res);
 		if($res == 0) {
 			if ($userConfig->networkgroupid != null) {
-				exec('commands/get_ssid.sh '.Input::get('iface'), $old_ssid);
 				if($old_ssid[0] != "") {
 					if ($db->query('DELETE FROM `networks` WHERE `ssid`="'.$old_ssid[0].'" AND `networkgroupid`='.$userConfig->networkgroupid.' LIMIT 1')->error()){
 						die("Could not delete old connection!");
@@ -61,7 +61,6 @@ exec("./commands/get_ssid.sh in1", $ssid);
 
 $inputNetworks = array();
 if($userConfig->networkgroupid != null) {
-	echo "NOT NULL";
 	if ($db->query('SELECT * FROM networks WHERE networkgroupid='.$userConfig->networkgroupid.' AND type="I"')->error()) {
 		die('Failed to fetch user input networks!');
 	}
@@ -75,10 +74,10 @@ if($userConfig->networkgroupid != null) {
 			die('Failed to update user config!');
 		}
 		$userConfig->networkgroupid=null;
-		echo 'NULL';
+		array_push($messages, "Could not connect to netwroks from preset.");
+	} else {
+		array_push($messages, "Succesfully connected to networks from preset.");
 	}
-} else {
-	echo "NULL";
 } ?><!DOCTYPE html>
 <html>
   <head>
