@@ -2,6 +2,7 @@
 class User {
 	private $_db,
 			$_data,
+			$_group,
 			$_sessionName,
 			$_cookieName,
 			$_isLoggedIn = false;
@@ -28,7 +29,7 @@ class User {
 		if (!$id && $this->isLoggedIn()) {
 			$id = $this->data()->userid;
 		}
-		if (!$this->_db->update('users', $id, $fields)) {
+		if (!$this->_db->update('users', $id, "userid", $fields)) {
 			throw new Exception('There was a problem updating!');
 		}
 	}
@@ -45,6 +46,10 @@ class User {
 			$data = $this->_db->get('users', array($field, '=', $user));
 			if ($data && $data->count() > 0) {
 				$this->_data = $data->first();
+				$group = $this->_db->get('groups', array('groupid', '=', $this->data()->groupid));
+				if ($group && $group->count() > 0) {
+					$this->_group = $group->first();
+				}
 				return true;
 			}
 		}
@@ -102,6 +107,10 @@ class User {
 
 	public function data() {
 		return $this->_data;
+	}
+
+	public function group_data() {
+		return $this->_group;
 	}
 
 	public function isLoggedIn() {

@@ -2,6 +2,7 @@
 
 $messages = array();
 $user = new User();
+$db = DB::getInstance();
 
 if(!$user->isLoggedIn()) {
 	Redirect::to('login.php');
@@ -10,6 +11,90 @@ if(!$user->isLoggedIn()) {
 if(Session::exists('success')) {
 	array_push($messages, Session::flash('success'));
 }
+
+if(Input::exists()) {
+	if(Token::check(Input::get('token'))) {   
+		$validate = new Validate();
+		$validation = $validate->check($_POST, array(
+			'oldpass' => array(
+				'required' => true,
+				'min' => 6,
+				'max' => 50
+			),
+			'newpass' => array(
+				'required' => true,
+				'min' => 6,
+				'max' => 50
+			),
+			'repass' => array(
+				'required' => true,
+				'min' => 6, 
+				'max' => 50,
+				'matches' => 'newpass'
+			) 
+		));   
+
+		if($validation->passed()) { 
+			if(Hash::make(Input::get('oldpass'), $user->data()->passwordsalt) !== $user->data()->passwordhash) {
+				array_push($messages, "Wrong password");
+			} else {
+				$salt = Hash::salt(32);
+				$hash = Hash::make(Input::get('newpass'), $salt);
+				try{                  
+					$user->update(array(
+						'passwordhash' => $hash,
+						'passwordsalt' => $salt
+					));    
+					Session::flash('success', 'Password changed');
+					Redirect::to('index.php');
+				} catch (Exception $e) {
+					die($e->getMessage());
+				}
+			}
+		} else {
+			foreach($validation->errors() as $error) {
+				array_push($messages, $error);
+			}
+		}
+	}
+}
+
+if ($db->query('SELECT `networkgroupid`, `networkid` FROM `configs` WHERE userid='.$user->data()->userid)->error()){
+	die('Failed to fetch user config!');
+}
+$userConfig = $db->results()[0];
+
+$inputNetworks = array();
+if ($userConfig->networkgroupid != null) {
+	if ($db->query('SELECT `networkid`, `ssid` FROM `networks` WHERE `networkgroupid`='.$userConfig->networkgroupid.' AND `type`="I"')->error()) {
+		die('Failed to fetch input networks!');
+	}
+	$inputNetworks = $db->results();
+}
+for ($i = 0; $i<count($inputNetworks); $i++) {
+	if ($db->query('SELECT * FROM `performances` WHERE `networkid`='.$inputNetworks[$i]->networkid.' ORDER BY `testdate` DESC LIMIT 1')->error()) {
+		die('Failed to fetch network performance!');
+	}
+	if ($db->count() > 0) {
+		$inputNetworks[$i]->uploadspeed = $db->results()[0]->uploadspeed;
+		$inputNetworks[$i]->downloadspeed = $db->results()[0]->downloadspeed;
+	}
+}
+
+if ($db->query('SELECT `networkid`, `ssid`, `password` FROM `networks` WHERE `networkid`='.$userConfig->networkid.' AND `type`="O"')->error()) {
+	die('Failed to fetch output networks!');
+}
+$outputNetwork=$db->results()[0];
+if ($db->query('SELECT * FROM `performances` WHERE `networkid`='.$outputNetwork->networkid.' ORDER BY `testdate` DESC LIMIT 1')->error()) {
+	die('Failed to fetch network performance!');
+}
+if ($db->count() > 0) {
+	$outputNetwork->uploadspeed = $db->results()[0]->uploadspeed;
+	$outputNetwork->downloadspeed = $db->results()[0]->downloadspeed;
+}
+
+foreach($messages as $error) 
+echo $error
  ?><!DOCTYPE html>
 <html>
   <head>
@@ -54,21 +139,51 @@ if(Session::exists('success')) {
             <div class="card-content">
               <div class="card-title center">IN</div>
               <div class="wifi row">
-                <div class="ssid center col s12">TEMP</div>
-                <div class="performance col s6">
-                  <div class="title">Download</div>126 kb/s
+                <div class="ssid center col s12">
+                   <?php if(count($inputNetworks) > 0)
+	echo $inputNetworks[0]->ssid;  ?>
                 </div>
                 <div class="performance col s6">
-                  <div class="title">Upload</div>126 kb/s
+                  <div class="title">
+                     <?php if(count($inputNetworks) > 0) {
+	if (property_exists($inputNetworks[0], 'downloadspeed')) {
+		echo 'Download | '.$inputNetworks[0]->downloadspeed.' kb/s';
+	}
+} ?>
+                  </div>
+                </div>
+                <div class="performance col s6">
+                  <div class="title">
+                     <?php if(count($inputNetworks) > 0) {
+	if (property_exists($inputNetworks[0], 'uploadspeed')) {
+		echo 'Upload | '.$inputNetworks[0]->uploadspeed.' kb/s';
+	}
+} ?>
+                  </div>
                 </div>
               </div>
               <div class="wifi row">
-                <div class="ssid center col s12">TEMP</div>
-                <div class="performance col s6">
-                  <div class="title">Download</div>126 kb/s
+                <div class="ssid center col s12">
+                   <?php if(count($inputNetworks) > 1)
+	echo $inputNetworks[1]->ssid; ?>
                 </div>
                 <div class="performance col s6">
-                  <div class="title">Upload</div>126 kb/s
+                  <div class="title">
+                     <?php if(count($inputNetworks) > 1) {
+	if (property_exists($inputNetworks[1], 'downloadspeed')) {
+		echo 'Download | '.$inputNetworks[1]->downloadspeed.' kb/s';
+	}
+} ?>
+                  </div>
+                </div>
+                <div class="performance col s6">
+                  <div class="title">
+                     <?php if(count($inputNetworks) > 1) {
+	if (property_exists($inputNetworks[1], 'uploadspeed')) {
+		echo 'Upload | '.$inputNetworks[1]->uploadspeed.' kb/s';
+	}
+} ?>
+                  </div>
                 </div>
               </div>
             </div>
@@ -79,14 +194,29 @@ if(Session::exists('success')) {
             <div class="card-content">
               <div class="card-title center">OUT</div>
               <div class="wifi row">
-                <div class="ssid center col s12">TEMP</div>
-                <div class="pass center col s12">Password: <span>$sfaewfg!3</span></div>
-                <div class="devices col s12">Connected devices:<span>6</span></div>
+                <div class="ssid center col s12">
+                   <?php echo $outputNetwork->ssid; ?></div>
+                <div class="pass center col s12">Password: <span>
+                     <?php echo $outputNetwork->password; ?></span></div>
+                <div class="devices col s12">Connected devices:<span>
+                     <?php echo exec('sudo commands/get_connected.sh -n'); ?></span></div>
                 <div class="performance col s6">
-                  <div class="title">Download</div>126 kb/s
+                  <div class="title">
+                     <?php if(count($inputNetworks) > 1) {
+	if (property_exists($inputNetworks[1], 'uploadspeed')) {
+		echo 'Upload | '.$inputNetworks[1]->uploadspeed.' kb/s';
+	}
+} ?>
+                  </div>
                 </div>
                 <div class="performance col s6">
-                  <div class="title">Upload</div>126 kb/s
+                  <div class="title">
+                     <?php if(count($inputNetworks) > 1) {
+	if (property_exists($inputNetworks[1], 'downloadspeed')) {
+		echo 'Download | '.$inputNetworks[1]->downloadspeed.' kb/s';
+	}
+} ?>
+                  </div>
                 </div>
               </div>
             </div>
@@ -97,9 +227,12 @@ if(Session::exists('success')) {
             <div class="card-content">
               <div class="card-title center">User</div>
               <div class="user center">
-                <div class="name">Duda</div>
-                <div class="group">Admin</div>
-                <div class="joined">Joined:<span>20-03-1993 12:32:02</span></div>
+                <div class="name">
+                   <?php echo $user->data()->username; ?></div>
+                <div class="group">
+                   <?php echo $user->group_data()->title; ?></div>
+                <div class="joined">Joined:<span>
+                     <?php echo $user->data()->joined; ?></span></div>
                 <div class="row">
                   <div class="col s12 m6"><a class="btn waves-effect waves-light modal-trigger" href="#changepass">Change password </a></div>
                   <div class="col s12 m6"><a class="btn waves-effect waves-light" href="logout.php">Log out</a></div>

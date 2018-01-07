@@ -88,7 +88,7 @@ class DB {
 		return false;
 	}
 	
-	public function update($table, $id, $fields = array()){
+	public function update($table, $id, $idname = "id", $fields = array()){
 		$set = '';
 		$x = 1;
 		foreach ($fields as $name => $value) {
@@ -98,7 +98,7 @@ class DB {
 			}
 			$x++;
 		}
-		$sql = "UPDATE {$table} SET {$set} WHERE id = {$id}";
+		$sql = "UPDATE {$table} SET {$set} WHERE $idname = {$id}";
 		if (!$this->query($sql, $fields)->error()) {
 				return true;
 			}

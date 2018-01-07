@@ -66,7 +66,16 @@ if(!$user->isLoggedIn()) {
         <div class="col s12 m6">
           <div class="card">
             <div class="card-content">
-              <div class="card-title center">Banned MACs</div>
+              <div class="card-title center">Allowed MACs</div>
+              <div class="row">
+                <div class="col s12 center">
+                  <div class="switch">
+                    <label>Off
+                      <input type="checkbox" checked><span class="lever"></span>On
+                    </label>
+                  </div>
+                </div>
+              </div>
               <ul class="collection">
                 <li class="collection-item">
                   <div class="connected">23:23:34:ff:02:4d<a class="secondary-content" href="#!"><i class="material-icons">clear</i></a></div>
@@ -84,7 +93,7 @@ if(!$user->isLoggedIn()) {
         <div class="col s12 m6">
           <div class="card">
             <div class="card-content">
-              <div class="card-title center">Ban device</div>
+              <div class="card-title center">Allow device</div>
               <form method="post">
                 <div class="row">
                   <div class="input-field col s12">

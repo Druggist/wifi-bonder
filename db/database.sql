@@ -4,7 +4,7 @@ CREATE DATABASE bonder;
 
 USE bonder;
 
-CREATE TABLE bannedmacs (
+CREATE TABLE allowedmacs (
 	macid              INTEGER PRIMARY KEY AUTO_INCREMENT,
 	mac                CHAR(12) NOT NULL,
 	configid           INTEGER NOT NULL
@@ -14,7 +14,8 @@ CREATE TABLE configs (
 	configid                       INTEGER PRIMARY KEY AUTO_INCREMENT,
 	networkgroupid                 INTEGER NOT NULL,
 	userid                         INTEGER NOT NULL,
-	networkid                      INTEGER NOT NULL
+	networkid                      INTEGER NOT NULL,
+	allowed_macs                   BOOLEAN NOT NULL DEFAULT FALSE 
 );
 
 CREATE UNIQUE INDEX configs__idx ON
@@ -76,11 +77,12 @@ CREATE TABLE users (
 	username       VARCHAR(100) UNIQUE NOT NULL,
 	passwordhash   VARCHAR(255) NOT NULL,
 	passwordsalt   VARCHAR(32) NOT NULL,
-	groupid        INTEGER NOT NULL
+	groupid        INTEGER NOT NULL,
+	joined         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-ALTER TABLE bannedmacs
-	ADD CONSTRAINT bannedmacs_configs_fk FOREIGN KEY ( configid )
+ALTER TABLE allowedmacs
+	ADD CONSTRAINT allowedmacs_configs_fk FOREIGN KEY ( configid )
 		REFERENCES configs ( configid );
 
 ALTER TABLE configs
