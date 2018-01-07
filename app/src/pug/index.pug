@@ -6,6 +6,7 @@ block php
 
 		$messages = array();
 		$user = new User();
+		$db = DB::getInstance();
 
 		if(!$user->isLoggedIn()) {
 			Redirect::to('login.php');
@@ -14,6 +15,55 @@ block php
 		if(Session::exists('success')) {
 			array_push($messages, Session::flash('success'));
 		}
+
+		if(Input::exists()) {
+			if(Token::check(Input::get('token'))) {   
+				$validate = new Validate();
+				$validation = $validate->check($_POST, array(
+					'oldpass' => array(
+						'required' => true,
+						'min' => 6,
+						'max' => 50
+					),
+					'newpass' => array(
+						'required' => true,
+						'min' => 6,
+						'max' => 50
+					),
+					'repass' => array(
+						'required' => true,
+						'min' => 6, 
+						'max' => 50,
+						'matches' => 'newpass'
+					) 
+				));   
+
+				if($validation->passed()) { 
+					if(Hash::make(Input::get('oldpass'), $user->data()->passwordsalt) !== $user->data()->passwordhash) {
+						array_push($messages, "Wrong password");
+					} else {
+						$salt = Hash::salt(32);
+						$hash = Hash::make(Input::get('newpass'), $salt);
+						try{                  
+							$user->update(array(
+								'passwordhash' => $hash,
+								'passwordsalt' => $salt
+							));    
+							Session::flash('success', 'Password changed');
+							Redirect::to('index.php');
+						} catch (Exception $e) {
+							die($e->getMessage());
+						}
+					}
+				} else {
+					foreach($validation->errors() as $error) {
+						array_push($messages, $error);
+					}
+				}
+			}
+		}
+		foreach($messages as $error) 
+		echo $error
 
 block body
 	include _navbar
@@ -49,11 +99,17 @@ block body
 					.card-content
 						.card-title.center OUT
 						.wifi.row
-							.ssid.center.col.s12 TEMP
+							.ssid.center.col.s12 
+								:php
+									echo "temp";
 							.pass.center.col.s12 Password: 
-								span $sfaewfg!3
+								span 
+									:php
+										echo "4sdr24";
 							.devices.col.s12 Connected devices:
-								span 6
+								span 
+									:php
+										echo "66";
 							.performance.col.s6
 								.title Download
 								| 126 kb/s
@@ -65,10 +121,16 @@ block body
 					.card-content
 						.card-title.center User
 						.user.center
-							.name Duda
-							.group Admin
+							.name 
+								:php
+									echo $user->data()->username;
+							.group 
+								:php
+									echo $user->group_data()->title;
 							.joined Joined:
-								span 20-03-1993 12:32:02
+								span 
+									:php
+										echo $user->data()->joined;
 							.row
 								.col.s12.m6
 									a.btn.waves-effect.waves-light.modal-trigger(href="#changepass") Change password 

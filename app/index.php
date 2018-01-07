@@ -2,6 +2,7 @@
 
 $messages = array();
 $user = new User();
+$db = DB::getInstance();
 
 if(!$user->isLoggedIn()) {
 	Redirect::to('login.php');
@@ -10,6 +11,55 @@ if(!$user->isLoggedIn()) {
 if(Session::exists('success')) {
 	array_push($messages, Session::flash('success'));
 }
+
+if(Input::exists()) {
+	if(Token::check(Input::get('token'))) {   
+		$validate = new Validate();
+		$validation = $validate->check($_POST, array(
+			'oldpass' => array(
+				'required' => true,
+				'min' => 6,
+				'max' => 50
+			),
+			'newpass' => array(
+				'required' => true,
+				'min' => 6,
+				'max' => 50
+			),
+			'repass' => array(
+				'required' => true,
+				'min' => 6, 
+				'max' => 50,
+				'matches' => 'newpass'
+			) 
+		));   
+
+		if($validation->passed()) { 
+			if(Hash::make(Input::get('oldpass'), $user->data()->passwordsalt) !== $user->data()->passwordhash) {
+				array_push($messages, "Wrong password");
+			} else {
+				$salt = Hash::salt(32);
+				$hash = Hash::make(Input::get('newpass'), $salt);
+				try{                  
+					$user->update(array(
+						'passwordhash' => $hash,
+						'passwordsalt' => $salt
+					));    
+					Session::flash('success', 'Password changed');
+					Redirect::to('index.php');
+				} catch (Exception $e) {
+					die($e->getMessage());
+				}
+			}
+		} else {
+			foreach($validation->errors() as $error) {
+				array_push($messages, $error);
+			}
+		}
+	}
+}
+foreach($messages as $error) 
+echo $error
  ?><!DOCTYPE html>
 <html>
   <head>
@@ -79,9 +129,12 @@ if(Session::exists('success')) {
             <div class="card-content">
               <div class="card-title center">OUT</div>
               <div class="wifi row">
-                <div class="ssid center col s12">TEMP</div>
-                <div class="pass center col s12">Password: <span>$sfaewfg!3</span></div>
-                <div class="devices col s12">Connected devices:<span>6</span></div>
+                <div class="ssid center col s12">
+                   <?php echo "temp"; ?></div>
+                <div class="pass center col s12">Password: <span>
+                     <?php echo "4sdr24"; ?></span></div>
+                <div class="devices col s12">Connected devices:<span>
+                     <?php echo "66"; ?></span></div>
                 <div class="performance col s6">
                   <div class="title">Download</div>126 kb/s
                 </div>
@@ -97,9 +150,12 @@ if(Session::exists('success')) {
             <div class="card-content">
               <div class="card-title center">User</div>
               <div class="user center">
-                <div class="name">Duda</div>
-                <div class="group">Admin</div>
-                <div class="joined">Joined:<span>20-03-1993 12:32:02</span></div>
+                <div class="name">
+                   <?php echo $user->data()->username; ?></div>
+                <div class="group">
+                   <?php echo $user->group_data()->title; ?></div>
+                <div class="joined">Joined:<span>
+                     <?php echo $user->data()->joined; ?></span></div>
                 <div class="row">
                   <div class="col s12 m6"><a class="btn waves-effect waves-light modal-trigger" href="#changepass">Change password </a></div>
                   <div class="col s12 m6"><a class="btn waves-effect waves-light" href="logout.php">Log out</a></div>
