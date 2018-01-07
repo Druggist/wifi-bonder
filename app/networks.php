@@ -104,6 +104,21 @@ if($userConfig->networkgroupid != null) {
     <title>WiFi bonder app</title>
   </head>
   <body>
+    <ul class="side-nav" id="slide-out">
+      <li>
+        <div class="divider"></div><a class="subheader">Administration</a>
+      </li>
+      <li><a class="waves-effect" href="index.php"><i class="material-icons">device_hub</i>Hub</a></li>
+      <li><a class="waves-effect" href="networks.php"><i class="material-icons">network_wifi</i>Networks</a></li>
+      <li><a class="waves-effect" href="dhcp.php"><i class="material-icons">dns</i>DHCP</a></li>
+      <li><a class="waves-effect" href="performance.php"><i class="material-icons">network_check</i>Performance</a></li>
+      <li><a class="waves-effect" href="logs.php"><i class="material-icons">error</i>Logs</a></li>
+      <li><a class="waves-effect" href="logout.php"><i class="material-icons">exit_to_app</i>Log out</a></li>
+      <li>
+        <div class="divider"></div><a class="subheader">Services</a>
+      </li>
+      <li><a class="waves-effect" href="pastes.php"><i class="material-icons">content_paste</i>Pastes</a></li>
+    </ul><a class="button-collapse show-on-large menu btn waves-effect btn-large white" href="#" data-activates="slide-out"><i class="material-icons">menu</i></a>
     <div class="container">
       <div class="row">
         <div class="col s12 m12">
