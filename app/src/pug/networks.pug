@@ -84,6 +84,7 @@ block php
 			}
 		}
 block body
+	include _navbar
 	.container
 		.row
 			.col.s12.m12
@@ -187,6 +188,7 @@ block script
 	script(src="components/jquery/dist/jquery.js")
 	script(src="components/materialize/dist/js/materialize.js")
 	script(src="static/js/networks.js")
+	script(src="static/js/main.min.js")
 	:php
 		if(!empty($messages)){
 			echo '<script type="text/javascript">';
