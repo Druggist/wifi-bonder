@@ -43,7 +43,7 @@ if(Input::exists()) {
 							"ssid" => "Default output network",
 							"password" => "password",
 							"type" => "O",
-							"networkgroupid" => $networkGroupId))) {
+							"networkgroupid" => null))) {
 						$networkId = $db->insertId();
 					} else {
 						die('Failed to create default output network!');

@@ -22,22 +22,35 @@ if(Input::exists()) {
 			'required' => true
 		)));
 	if($validation->passed()) { 
-		exec('commands/get_ssid.sh '.Input::get('iface'), $old_ssid);
-		exec('sudo commands/connect.sh "'.Input::get('iface').'" "'.Input::get('ssid').'" "'.Input::get('pass').'"', $out, $res);
-		if($res == 0) {
-			if ($userConfig->networkgroupid != null) {
-				if($old_ssid[0] != "") {
-					if ($db->query('DELETE FROM `networks` WHERE `ssid`="'.$old_ssid[0].'" AND `networkgroupid`='.$userConfig->networkgroupid.' LIMIT 1')->error()){
-						die("Could not delete old connection!");
+		if(Input::get('iface') == "in0" || Input::get('iface') == "in1") {
+			exec('commands/get_ssid.sh '.Input::get('iface'), $old_ssid);
+			exec('sudo commands/connect.sh "'.Input::get('iface').'" "'.Input::get('ssid').'" "'.Input::get('pass').'"', $out, $res);
+			if($res == 0) {
+				if ($userConfig->networkgroupid != null) {
+					if($old_ssid[0] != "") {
+						if ($db->query('DELETE FROM `networks` WHERE `ssid`="'.$old_ssid[0].'" AND `networkgroupid`='.$userConfig->networkgroupid.' LIMIT 1')->error()){
+							die("Could not delete old connection!");
+						}
+					}
+					if ($db->query('INSERT INTO `networks` (`ssid`, `password`, `type`, `networkgroupid`) VALUES ("'.Input::get('ssid').'", "'.Input::get('pass').'", "I", '.$userConfig->networkgroupid.')')->error()) {
+						die("cannot insert network to database");
 					}
 				}
-				if ($db->query('INSERT INTO `networks` (`ssid`, `password`, `type`, `networkgroupid`) VALUES ("'.Input::get('ssid').'", "'.Input::get('pass').'", "I", '.$userConfig->networkgroupid.')')->error()) {
-					die("cannot insert network to database");
-				}
+				array_push($messages, "Connected to ".Input::get('ssid')." on interface ".Input::get('iface'));
+			} else {
+				array_push($messages, "Could not connect to ".Input::get('ssid'));
 			}
-			array_push($messages, "Connected to ".Input::get('ssid')." on interface ".Input::get('iface'));
+		} elseif (Input::get('iface') == "out0") {
+			exec('sudo commands/create_hotspot.sh "'.Input::get('ssid').'" "'.Input::get('pass').'" 2>&1', $out, $res);
+			echo "<br> out: ";
+			var_dump($out);
+			echo "<br> res: ";
+			var_dump($res);
+			if ($db->query('UPDATE `networks` SET `ssid`="'.Input::get('ssid').'", `password`="'.Input::get('pass').'" WHERE networkid='.$userConfig->networkid)->error()) {
+				die("Cannot update output network");
+			}
 		} else {
-			array_push($messages, "Could not connect to ".Input::get('ssid'));
+			die('Incorrect iface name');
 		}
 	} else {
 		foreach($validation->errors() as $error) {
@@ -75,8 +88,6 @@ if($userConfig->networkgroupid != null) {
 		}
 		$userConfig->networkgroupid=null;
 		array_push($messages, "Could not connect to netwroks from preset.");
-	} else {
-		array_push($messages, "Succesfully connected to networks from preset.");
 	}
 } ?><!DOCTYPE html>
 <html>
@@ -93,21 +104,6 @@ if($userConfig->networkgroupid != null) {
     <title>WiFi bonder app</title>
   </head>
   <body>
-    <ul class="side-nav" id="slide-out">
-      <li>
-        <div class="divider"></div><a class="subheader">Administration</a>
-      </li>
-      <li><a class="waves-effect" href="index.php"><i class="material-icons">device_hub</i>Hub</a></li>
-      <li><a class="waves-effect" href="networks.php"><i class="material-icons">network_wifi</i>Networks</a></li>
-      <li><a class="waves-effect" href="dhcp.php"><i class="material-icons">dns</i>DHCP</a></li>
-      <li><a class="waves-effect" href="performance.php"><i class="material-icons">network_check</i>Performance</a></li>
-      <li><a class="waves-effect" href="logs.php"><i class="material-icons">error</i>Logs</a></li>
-      <li><a class="waves-effect" href="logout.php"><i class="material-icons">exit_to_app</i>Log out</a></li>
-      <li>
-        <div class="divider"></div><a class="subheader">Services</a>
-      </li>
-      <li><a class="waves-effect" href="pastes.php"><i class="material-icons">content_paste</i>Pastes</a></li>
-    </ul><a class="button-collapse show-on-large menu btn waves-effect btn-large white" href="#" data-activates="slide-out"><i class="material-icons">menu</i></a>
     <div class="container">
       <div class="row">
         <div class="col s12 m12">
@@ -165,8 +161,9 @@ foreach($networkGroups as $group) {
                     <label for="ssid">Ssid</label>
                   </div>
                   <div class="input-field col s12">
-                    <input id="password" type="password" name="password" value="<?php echo $outputNetwork->password; ?>">
-                    <label for="password">Password</label>
+                    <input id="pass" type="password" name="pass" value="<?php echo $outputNetwork->password; ?>">
+                    <label for="pass">Password</label>
+                    <input id="iface" type="hidden" name="iface" value="out0">
                   </div>
                   <div class="col s12 center">
                     <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">

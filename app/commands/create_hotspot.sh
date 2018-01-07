@@ -9,5 +9,6 @@ if [ "$1" = "" ]
 then
   	echo "ERROR: SSID was not specified."
 	exit 0
+fi
 
 create_ap --daemon "$WLOUT0" bond0 "$1" "$2"
