@@ -77,7 +77,8 @@ CREATE TABLE users (
 	username       VARCHAR(100) UNIQUE NOT NULL,
 	passwordhash   VARCHAR(255) NOT NULL,
 	passwordsalt   VARCHAR(32) NOT NULL,
-	groupid        INTEGER NOT NULL
+	groupid        INTEGER NOT NULL,
+	joined         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 ALTER TABLE allowedmacs
