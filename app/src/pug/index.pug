@@ -109,7 +109,7 @@ block body
 							.devices.col.s12 Connected devices:
 								span 
 									:php
-										echo "66";
+										echo exec('sudo commands/get_connected.sh -n');
 							.performance.col.s6
 								.title Download
 								| 126 kb/s

@@ -134,7 +134,7 @@ echo $error
                 <div class="pass center col s12">Password: <span>
                      <?php echo "4sdr24"; ?></span></div>
                 <div class="devices col s12">Connected devices:<span>
-                     <?php echo "66"; ?></span></div>
+                     <?php echo exec('sudo commands/get_connected.sh -n'); ?></span></div>
                 <div class="performance col s6">
                   <div class="title">Download</div>126 kb/s
                 </div>
