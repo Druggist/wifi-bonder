@@ -10,5 +10,6 @@ then
   	echo "ERROR: SSID was not specified."
 	exit 0
 fi
-create_ap --stop ap0
+
+source $dir/stop_hotspot.sh
 create_ap --daemon "$WLOUT0" bond0 "$1" "$2"

@@ -16,11 +16,18 @@ if(Input::exists()) {
 	$validate = new Validate();
 	$validation = $validate->check($_POST, array(
 		'ssid' => array(
-			'required' => true
+			'required' => true,
+			'min' => 2,
+			'max' => 32
+		),
+		'pass' => array( 
+				'min' => 8,
+				'max' => 64
 		),
 		'iface' => array(
 			'required' => true
-		)));
+		)
+		));
 	if($validation->passed()) { 
 		if(Input::get('iface') == "in0" || Input::get('iface') == "in1") {
 			exec('commands/get_ssid.sh '.Input::get('iface'), $old_ssid);
@@ -41,11 +48,12 @@ if(Input::exists()) {
 				array_push($messages, "Could not connect to ".Input::get('ssid'));
 			}
 		} elseif (Input::get('iface') == "out0") {
-			exec('sudo commands/create_hotspot.sh "'.Input::get('ssid').'" "'.Input::get('pass').'" 2>&1', $out, $res);
-			echo "<br> out: ";
-			var_dump($out);
-			echo "<br> res: ";
-			var_dump($res);
+			exec('sudo php commands/create_hotspot.php?ssid="'.Input::get('ssid').'"&pass="'.Input::get('pass').'"', $out, $res);
+			//- exec('sudo commands/create_hotspot.sh "'.Input::get('ssid').'" "'.Input::get('pass').'"', $out, $res);
+			//- echo "<br> out: ";
+			//- var_dump($out);
+			//- echo "<br> res: ";
+			//- var_dump($res);
 			if ($db->query('UPDATE `networks` SET `ssid`="'.Input::get('ssid').'", `password`="'.Input::get('pass').'" WHERE networkid='.$userConfig->networkid)->error()) {
 				die("Cannot update output network");
 			}
@@ -176,7 +184,7 @@ foreach($networkGroups as $group) {
                     <label for="ssid">Ssid</label>
                   </div>
                   <div class="input-field col s12">
-                    <input id="pass" type="password" name="pass" value="<?php echo $outputNetwork->password; ?>">
+                    <input id="pass" type="text" name="pass" value="<?php echo $outputNetwork->password; ?>">
                     <label for="pass">Password</label>
                     <input id="iface" type="hidden" name="iface" value="out0">
                   </div>
