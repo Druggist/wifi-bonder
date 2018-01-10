@@ -38,7 +38,6 @@ if(Input::exists()) {
 	}
 }
 
-
  ?><!DOCTYPE html>
 <html>
   <head>

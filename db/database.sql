@@ -12,7 +12,7 @@ CREATE TABLE allowedmacs (
 
 CREATE TABLE configs (
 	configid                       INTEGER PRIMARY KEY AUTO_INCREMENT,
-	networkgroupid                 INTEGER NOT NULL,
+	networkgroupid                 INTEGER NULL,
 	userid                         INTEGER NOT NULL,
 	networkid                      INTEGER NOT NULL,
 	allowed_macs                   BOOLEAN NOT NULL DEFAULT FALSE 
@@ -76,7 +76,7 @@ CREATE TABLE users (
 	userid         INTEGER PRIMARY KEY AUTO_INCREMENT,
 	username       VARCHAR(100) UNIQUE NOT NULL,
 	passwordhash   VARCHAR(255) NOT NULL,
-	passwordsalt   VARCHAR(32) NOT NULL,
+	passwordsalt   VARCHAR(64) NOT NULL,
 	groupid        INTEGER NOT NULL,
 	joined         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
