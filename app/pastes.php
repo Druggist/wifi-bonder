@@ -4,6 +4,10 @@ $messages = array();
 $db = DB::getInstance();
 $user = new User();
 
+if(!$user->isLoggedIn()) {
+	Redirect::to('login.php');
+}
+
 If(Input::exists()){	
 	if(Token::check(Input::get('token'))) {     
 		$validate = new Validate();
@@ -54,7 +58,7 @@ If(Input::exists()){
 	}
 }
  
-if($db->query("SELECT * FROM pastes ORDER BY `creationtime` DESC")->error()){
+if($db->query("SELECT * FROM pastes WHERE userid=".$user->data()->userid." ORDER BY `creationtime` DESC")->error()){
 	die('Error occured. Try again!');
 }
 $results = $db->results(); ?><!DOCTYPE html>
