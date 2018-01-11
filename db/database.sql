@@ -133,10 +133,11 @@ CREATE PROCEDURE getupdatedpastes()
 		SELECT * FROM pastes;
 	END//
 
-CREATE FUNCTION getdaystodelete(paste INTEGER)
-	RETURNS INTEGER READS SQL DATA
+CREATE FUNCTION  getdaystodelete(paste INT)
+	RETURNS INT READS SQL DATA
 	BEGIN
-		RETURN DATEDIFF((SELECT CURRENT_TIMESTAMP), (SELECT creationtime from pastes));
+		DECLARE days_to_delete INT;
+		SELECT IF(flag != 'E', DATEDIFF(creationtime, CURRENT_DATE())+30, DATEDIFF(creationtime, CURRENT_DATE())+60) INTO days_to_delete FROM pastes WHERE pasteid=paste;
+		RETURN days_to_delete;
 	END//
 DELIMITER ;
-

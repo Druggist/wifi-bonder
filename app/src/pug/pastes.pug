@@ -1,0 +1,127 @@
+extends _template
+
+block php
+	:php
+		require_once 'core/init.php';
+
+		$messages = array();
+		$db = DB::getInstance();
+		$user = new User();
+
+		if(!$user->isLoggedIn()) {
+			Redirect::to('login.php');
+		}
+		
+		If(Input::exists()){	
+			if(Token::check(Input::get('token'))) {     
+				$validate = new Validate();
+				$validation = $validate->check($_POST, array(
+					'title' => array(
+						'required' => true, 
+						'min' => 2,
+						'max' => 100
+					),
+					'data' => array( 
+						'required' => true,
+						'min' => 2,
+						'max' => 1000
+					)
+				));   		
+				if($validation->passed()) {						
+					$data = Input::get('data');				
+					$title = Input::get('title');			
+					$flag = Input::get('flag');
+					if($flag!='') {
+						$flag='E';
+					} else {
+						$flag='N';
+					}
+					$userid = $user->data()->userid;
+					$date = date('Y-m-d H:i:s');
+					try {
+						if($db->insert('pastes', array(
+							'data' => $data,
+							'title' => $title,
+							'flag' => $flag,
+							'creationtime' => $date,
+							'userid' => $userid
+						))) {
+							Session::flash('success', 'Paste created!');
+							Redirect::to('pastes.php');
+						} else {
+							array_push($messages, "Cannot add paste!");
+						}                     
+					} catch(Exception $e) {
+						die($e->getMessage());
+					}		
+				} else {
+					foreach($validation->errors() as $error) {
+						array_push($messages, $error);
+					}
+				}
+			}
+		}
+		 
+		if($db->query("SELECT * FROM pastes WHERE userid=".$user->data()->userid." ORDER BY `creationtime` DESC")->error()){
+			die('Error occured. Try again!');
+		}
+		$results = $db->results();
+block body
+	.container
+		.row
+			.col.s12.m6.offset-m3
+				.card
+					.card-content.center
+						.card-title PASTY
+				.card
+					.card-content.center
+						a.btn.waves-effect.waves-light.modal-trigger(href="#create_paste") Create paste
+		.row#pastes
+			:php
+				foreach($results as $result) {
+					echo '<div class="col s12 m4 l3"><a class="modal-trigger" href="#show_paste" data-id="'.$result->pasteid.'"> <div class="card"><div class="card-content"><div class="card-title">'.$result->title.'</div><p class="truncate">'.$result->data.'</p></div></div></a></div>';}
+
+	.modal#show_paste
+		.modal-content#paste_content
+			h4 TEMP
+			p TEMP
+
+		.modal-footer
+			a.modal-action.modal-close.waves-effect.waves-light.btn-flat(href="#!") Close			
+
+	.modal#create_paste
+		.modal-content
+			h4 Create paste
+			form(method="post")
+				.row
+					.input-field.col.s12
+						input#title(type="text", name="title")
+						label(for="title") Title
+					.input-field.col.s12
+						textarea.materialize-textarea#data(name="data")
+						label(for="data") Content
+					.col.s12
+						input#flag(type="checkbox", name="flag")
+						label(for="flag") Extended time
+					.col.s12.center
+						input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
+						button.btn.waves-effect.waves-light(type="submit") Add
+
+		.modal-footer
+			a.modal-action.modal-close.waves-effect.waves-light.btn-flat(href="#!") Close		
+
+
+block script 
+	script(src="components/jquery/dist/jquery.min.js")
+	script(src="components/materialize/dist/js/materialize.min.js")
+	script(src="static/js/pastes.min.js")
+	:php
+		if(!empty($messages)){
+			echo '<script type="text/javascript">';
+			foreach ($messages as $message) {
+				echo "Materialize.toast('{$message}', 4000);";
+			}
+			echo '</script>';
+		}
+
+						
