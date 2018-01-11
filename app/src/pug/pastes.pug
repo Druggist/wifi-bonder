@@ -67,6 +67,8 @@ block php
 		}
 		$results = $db->results();
 block body
+	include _navbar
+	
 	.container
 		.row
 			.col.s12.m6.offset-m3
@@ -114,6 +116,7 @@ block body
 block script 
 	script(src="components/jquery/dist/jquery.min.js")
 	script(src="components/materialize/dist/js/materialize.min.js")
+	script(src="static/js/main.min.js")
 	script(src="static/js/pastes.min.js")
 	:php
 		if(!empty($messages)){

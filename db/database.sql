@@ -32,6 +32,7 @@ CREATE TABLE logs (
 	type             SMALLINT NOT NULL,
 	description      VARCHAR(255) NOT NULL,
 	userid           INTEGER NOT NULL
+	date             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE networkgroups (

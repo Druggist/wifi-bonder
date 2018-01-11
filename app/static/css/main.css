@@ -4063,7 +4063,6 @@ button.btn-floating {
   border-radius: 0;
   will-change: bottom, opacity; }
 
-<<<<<<< HEAD
 .collapsible {
   border-top: 1px solid #ddd;
   border-right: 1px solid #ddd;
@@ -4178,8 +4177,6 @@ button.btn-floating {
   z-index: 1000;
   -webkit-font-smoothing: antialiased; }
 
-=======
->>>>>>> feature/pastes
 select:focus {
   outline: 1px solid white; }
 

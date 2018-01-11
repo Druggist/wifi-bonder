@@ -6,6 +6,12 @@ $user = new User();
 if(!$user->isLoggedIn()) {
 	Redirect::to('login.php');
 }
+
+$db = DB::getInstance();
+if ($db->query('SELECT * FROM logs')->error()) {
+	die("Failed to fetch logs");
+}
+$logs = $db->results();
  ?><!DOCTYPE html>
 <html>
   <head>
@@ -46,19 +52,29 @@ if(!$user->isLoggedIn()) {
           </div>
         </div>
         <div class="col s12">
-          <ul class="collapsible card" data-collapsible="accordion">
-            <li>
-              <div class="collapsible-header error"><i class="material-icons">error</i><span>2017-04-02 13:02:20</span></div>
-              <div class="collapsible-body"><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</span></div>
-            </li>
-            <li>
-              <div class="collapsible-header warning"><i class="material-icons">warning</i><span>2017-04-02 13:02:20</span></div>
-              <div class="collapsible-body"><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</span></div>
-            </li>
-            <li>
-              <div class="collapsible-header info"><i class="material-icons">info</i><span>2017-04-02 13:02:20</span></div>
-              <div class="collapsible-body"><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</span></div>
-            </li>
+          <ul class="collapsible card" data-collapsible="accordion"><?php foreach($logs as $log) {
+	if($log->type==0) {
+		$type = "info";
+	} elseif ($log->type==1) {
+		$type = "warning";
+	} else {
+		$type = "error";
+	}
+	$username = new User($log->userid);
+	$username = $username->data()->username;
+	echo '<li>
+		<div class="collapsible-header '.$type.'">
+			<i class="material-icons">'.$type.'</i><span>'.$log->date.'</span>
+		</div>
+		<div class="collapsible-body">
+			<span><b>User: </b> '.$username.'</span><br>
+			<span><b>Type: </b> '.$type.'</span><br>
+			<span><b>Date: </b> '.$log->date.'</span><br>
+			<span><b>Message: </b><i>'.$log->description.'</i></span>
+		</div>
+	</li>';
+}
+ ?>
           </ul>
         </div>
       </div>
