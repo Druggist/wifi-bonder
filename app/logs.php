@@ -8,7 +8,7 @@ if(!$user->isLoggedIn()) {
 }
 
 $db = DB::getInstance();
-if ($db->query('SELECT * FROM logs')->error()) {
+if ($db->query('SELECT * FROM logs ORDER BY logid DESC')->error()) {
 	die("Failed to fetch logs");
 }
 $logs = $db->results();

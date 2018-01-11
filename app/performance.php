@@ -6,6 +6,36 @@ $user = new User();
 if(!$user->isLoggedIn()) {
 	Redirect::to('login.php');
 }
+
+$db = DB::getInstance();
+if ($db->query('SELECT performances.networkid, ssid, name FROM ((performances LEFT JOIN networks ON performances.networkid = networks.networkid) LEFT JOIN networkgroups ON networks.networkgroupid = networkgroups.networkgroupid) GROUP BY performances.networkid')->error()) {
+	die("Failed to fetch logs");
+}
+$testGroups = $db->results();
+
+if(Input::exists('get')) {
+	$validate = new Validate();
+	$validation = $validate->check($_GET, array(
+		'id' => array(
+			'required' => true,
+			'type' => 'number'
+		)
+	));   
+
+	if($validation->passed()) { 
+		if ($db->query('SELECT * FROM performances WHERE networkid='.Input::get('id'))->error()) {
+			die("Failed to fetch specified network performances");
+		}
+		$tests = $db->results();
+	} else {
+		foreach($validation->errors() as $error) {
+			array_push($messages, $error);
+		}
+	}
+	
+} else {
+	$tests = array();
+}
  ?><!DOCTYPE html>
 <html>
   <head>
@@ -49,60 +79,35 @@ if(!$user->isLoggedIn()) {
           <div class="card">
             <div class="card-content no-spaces">
               <div class="card-title center">Tests</div>
-              <form method="post">
+              <form method="get">
                 <div class="row no-spaces">
-                  <div class="input-field col s12 m6 l4 offset-m3 offset-l4">
-                    <select>
-                      <option value="" selected disabled></option>
-                      <option value="1">SSID 1</option>
-                      <option value="2">SSID 2</option>
-                      <option value="3">SSID 3</option>
+                  <div class="input-field col s12 m12 l12">
+                    <select id="id" name="id">
+                      <option value="" selected disabled><?php foreach($testGroups as $group) {
+	echo '<option value="'.$group->networkid.'">'.$group->ssid.' at preset: '.$group->name.'</option>';
+} ?>
+                      </option>
                     </select>
                     <label>Select network</label>
                   </div>
                 </div>
               </form>
             </div>
-            <ul class="collapsible" data-collapsible="accordion">
-              <li>
-                <div class="collapsible-header"><span>2017-04-02 13:02:20</span></div>
-                <div class="collapsible-body">
-                  <div class="wifi row">
-                    <div class="performance col s6">
-                      <div class="title">Download</div>126 kb/s
-                    </div>
-                    <div class="performance col s6">
-                      <div class="title">Upload</div>126 kb/s
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div class="collapsible-header"><span>2017-04-02 13:02:20</span></div>
-                <div class="collapsible-body">
-                  <div class="wifi row">
-                    <div class="performance col s6">
-                      <div class="title">Download</div>126 kb/s
-                    </div>
-                    <div class="performance col s6">
-                      <div class="title">Upload</div>126 kb/s
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div class="collapsible-header"><span>2017-04-02 13:02:20</span></div>
-                <div class="collapsible-body">
-                  <div class="wifi row">
-                    <div class="performance col s6">
-                      <div class="title">Download</div>126 kb/s
-                    </div>
-                    <div class="performance col s6">
-                      <div class="title">Upload</div>126 kb/s
-                    </div>
-                  </div>
-                </div>
-              </li>
+            <ul class="collapsible" data-collapsible="accordion"><?php foreach($tests as $test) {
+echo '<li>
+		<div class="collapsible-header"><span>'.$test->testdate.'</span></div>
+		<div class="collapsible-body">
+			<div class="wifi row">
+				<div class="performance col s6">
+					<div class="title">Download</div>'.$test->downloadspeed.' kb/s
+				</div>
+				<div class="performance col s6">
+					<div class="title">Upload</div>'.$test->uploadspeed.' kb/s
+				</div>
+			</div>
+		</div>
+	</li>';
+} ?>
             </ul>
           </div>
         </div>
