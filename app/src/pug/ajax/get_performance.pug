@@ -1,0 +1,13 @@
+:php
+	exec('speedtest-cli --simple', $r, $o);
+
+.performance.col.s12.m4
+	:php
+		echo $r[0];
+
+.performance.col.s6.m4
+	:php
+		echo $r[1];
+.performance.col.s6.m4
+	:php
+		echo $r[2];

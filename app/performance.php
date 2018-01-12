@@ -115,27 +115,12 @@ echo '<li>
           <div class="card">
             <div class="card-content">
               <div class="card-title center">New test
-                <form method="post">
-                  <div class="row">
-                    <div class="input-field col s12 m4 offset-m3 right-align">
-                      <select>
-                        <option value="" selected disabled></option>
-                        <option value="1">In1</option>
-                        <option value="2">In2</option>
-                        <option value="3">Out</option>
-                      </select>
-                      <label>Select network</label>
-                    </div>
-                    <div class="input-field col s12 m4 left-align"><a class="btn waves-effect waves-light" href="#">Test</a></div>
-                  </div>
-                </form>
-                <div class="wifi row">
-                  <div class="performance col s6">
-                    <div class="title">Download</div>126 kb/s
-                  </div>
-                  <div class="performance col s6">
-                    <div class="title">Upload</div>126 kb/s
-                  </div>
+                <div class="row">
+                  <div class="col s12"><a class="btn waves-effect waves-light" href="#new_data">Test</a></div>
+                </div>
+                <div class="wifi row" id="new_data"></div>
+                <div class="progress hide">
+                  <div class="indeterminate"></div>
                 </div>
               </div>
             </div>
