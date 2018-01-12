@@ -7,15 +7,13 @@ source $dir/config.sh
 
 interface=""
 
-if [ "$1" = "in0" ]
-then
+if [ "$1" = "in0" ]; then
   interface=$WLIN0
-elif [ "$1" = "in1" ]
-then
+elif [ "$1" = "in1" ]; then
   interface=$WLIN1
 else
 	echo "ERROR: Interaface was not specified."
 	exit 0
 fi
 
-nmcli -t -f ssid,signal,security dev wifi list ifname "$interface"
+echo `nmcli -t -f ssid,in-use dev wifi list ifname "$interface" | awk -F':' '$2 == "*" {print $1}'`

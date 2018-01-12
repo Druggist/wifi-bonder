@@ -128,11 +128,10 @@ ALTER TABLE sessions
 		REFERENCES users ( userid );
 
 DELIMITER //
-CREATE PROCEDURE getupdatedpastes()
+CREATE PROCEDURE updatepastes()
 	BEGIN
 		DELETE FROM pastes WHERE ((TIMESTAMPADD(MONTH, 1, creationtime) <= (SELECT CURRENT_TIMESTAMP)) AND (flag != 'E')) 
 		                      OR ((TIMESTAMPADD(MONTH, 2, creationtime) <= (SELECT CURRENT_TIMESTAMP)) AND (flag = 'E'));
-		SELECT * FROM pastes;
 	END//
 
 CREATE FUNCTION  getdaystodelete(paste INT)
@@ -142,4 +141,7 @@ CREATE FUNCTION  getdaystodelete(paste INT)
 		SELECT IF(flag != 'E', DATEDIFF(creationtime, CURRENT_DATE())+30, DATEDIFF(creationtime, CURRENT_DATE())+60) INTO days_to_delete FROM pastes WHERE pasteid=paste;
 		RETURN days_to_delete;
 	END//
+
 DELIMITER ;
+
+CREATE EVENT remove_pastes ON SCHEDULE EVERY 60 SECOND DO CALL updatepastes();

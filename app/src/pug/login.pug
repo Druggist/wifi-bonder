@@ -3,7 +3,8 @@ extends _template
 block php
 	:php
 		require_once 'core/init.php';
-
+		
+		$db = DB::getInstance();
 		$messages = array();
 		$user = new User();
 
@@ -29,7 +30,49 @@ block php
 				if($validation->passed()) {						
 					$remember = (Input::get('rememberme') === 'on') ? true : false;
 					$login = $user->login(Input::get('username'), Input::get('pass'), $remember);
+					$userId = $user->data()->userid;
 					if($login){
+						if($db->query('SELECT * FROM configs WHERE userid='.$userId)->error()) {
+							die('Failed to fetch user config!');
+						}
+						if($db->count() < 1) {
+							if($db->insert('networkgroups', array(
+									"name" => "Default network group",
+									"userid" => $userId))) {
+								$networkGroupId = $db->insertId();
+							} else {
+								die('Failed to create default network group!');
+							}
+							if($db->insert('networks', array(
+									"ssid" => "Default output network",
+									"password" => "password",
+									"type" => "O",
+									"networkgroupid" => null))) {
+								$networkId = $db->insertId();
+							} else {
+								die('Failed to create default output network!');
+							}
+							if(!($db->insert('networks', array(
+									"ssid" => "Default input network1",
+									"password" => "password",
+									"type" => "I",
+									"networkgroupid" => $networkGroupId
+								)) && $db->insert('networks', array(
+									"ssid" => "Default input network2",
+									"password" => "password",
+									"type" => "I",
+									"networkgroupid" => $networkGroupId
+								)))) {
+								die('Failed to create default input networks!');
+							}
+							if(!$db->insert('configs', array(
+									"userid" => $userId,
+									"networkgroupid" => $networkGroupId,
+									"networkid" => $networkId
+								))) {
+								die('Failed to create default users config');
+							}
+						} 
 						Redirect::to('index.php');
 					} else {
 						array_push($messages, "Wrong username or password!");

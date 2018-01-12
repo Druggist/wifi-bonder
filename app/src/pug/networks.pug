@@ -1,0 +1,218 @@
+extends _template
+
+block php
+	:php
+		require_once 'core/init.php';
+
+		$messages = array();
+		$db = DB::getInstance();
+		$user = new User();	
+		if(!$user->isLoggedIn()) {
+			Redirect::to('login.php');
+		}
+
+		if ($db->query('SELECT * FROM configs WHERE userid='.$user->data()->userid)->error()) {
+			die('Failed to get users config!');
+		}
+		$userConfig = $db->results()[0];
+
+		if(Input::exists()) {
+			$validate = new Validate();
+			$validation = $validate->check($_POST, array(
+				'ssid' => array(
+					'required' => true,
+					'min' => 2,
+					'max' => 32
+				),
+				'pass' => array( 
+						'min' => 8,
+						'max' => 64
+				),
+				'iface' => array(
+					'required' => true
+				)
+				));
+			if($validation->passed()) { 
+				if(Input::get('iface') == "in0" || Input::get('iface') == "in1") {
+					exec('commands/get_ssid.sh '.Input::get('iface'), $old_ssid);
+					exec('sudo commands/connect.sh "'.Input::get('iface').'" "'.Input::get('ssid').'" "'.Input::get('pass').'"', $out, $res);
+					if($res == 0) {
+						if ($userConfig->networkgroupid != null) {
+							if($old_ssid[0] != "") {
+								if ($db->query('DELETE FROM `networks` WHERE `ssid`="'.$old_ssid[0].'" AND `networkgroupid`='.$userConfig->networkgroupid.' LIMIT 1')->error()){
+									die("Could not delete old connection!");
+								}
+							}
+							if ($db->query('INSERT INTO `networks` (`ssid`, `password`, `type`, `networkgroupid`) VALUES ("'.Input::get('ssid').'", "'.Input::get('pass').'", "I", '.$userConfig->networkgroupid.')')->error()) {
+								die("cannot insert network to database");
+							}
+						}
+						array_push($messages, "Connected to ".Input::get('ssid')." on interface ".Input::get('iface'));
+					} else {
+						array_push($messages, "Could not connect to ".Input::get('ssid'));
+					}
+				} elseif (Input::get('iface') == "out0") {
+					echo exec('sudo commands/create_hotspot.sh "'.Input::get('ssid').'" "'.Input::get('pass').'" > /dev/null 2>/dev/null &', $out, $res);
+					var_dump($res);
+					if ($db->query('UPDATE `networks` SET `ssid`="'.Input::get('ssid').'", `password`="'.Input::get('pass').'" WHERE networkid='.$userConfig->networkid)->error()) {
+						die("Cannot update output network");
+					}
+					array_push($messages, "Created AP with ssid: ".Input::get('ssid'));
+				} else {
+					die('Incorrect iface name');
+				}
+			} else {
+				foreach($validation->errors() as $error) {
+					echo $error;
+				}
+			}
+		}
+
+		if ($db->query('SELECT * FROM networks WHERE networkid='.$userConfig->networkid)->error()) {
+			die('Failed to get user output network!');
+		}
+		$outputNetwork = $db->results()[0];
+
+		if ($db->query('SELECT * FROM networkgroups WHERE userid='.$user->data()->userid)->error()) {
+			die('Failed to fetch user saved network groups!');
+		}
+		$networkGroups = $db->results();
+
+		exec("./commands/get_ssid.sh in0", $ssid);
+		exec("./commands/get_ssid.sh in1", $ssid);
+		
+		$inputNetworks = array();
+		if($userConfig->networkgroupid != null) {
+			if ($db->query('SELECT * FROM networks WHERE networkgroupid='.$userConfig->networkgroupid.' AND type="I"')->error()) {
+				die('Failed to fetch user input networks!');
+			}
+			foreach($db->results() as $network) {
+				if(in_array($network->ssid, $ssid)) {
+					array_push($inputNetworks, $network);
+				}
+			}
+			if(count($inputNetworks) < $db->count()) {
+				if($db->query("UPDATE configs SET networkgroupid=null WHERE userid=".$user->data()->userid)->error()) {
+					die('Failed to update user config!');
+				}
+				$userConfig->networkgroupid=null;
+				array_push($messages, "Could not connect to netwroks from preset.");
+			}
+		}
+block body
+	include _navbar
+	.container
+		.row
+			.col.s12.m12
+				.card
+					.card-content.center
+						.card-title NETWORKING
+			.col.s12.m6
+				.card
+					.card-content.center
+						.card-title IN
+						form(method="get", action="ajax/change_networkgroup.php")
+							.row
+								
+									.input-field.col.s12.m8
+										select#network_groups(name="networkgroupid")
+											:php
+												echo '<option value="none"></option>';
+												foreach($networkGroups as $group) {
+													if ($group->networkgroupid == $userConfig->networkgroupid) {
+														echo '<option value="'.$group->networkgroupid.'" selected>'.$group->name.'</option>';	
+													} else {
+														echo '<option value="'.$group->networkgroupid.'">'.$group->name.'</option>';
+													}
+												}
+										label Load preset
+	
+									.input-field.col.s12.m4
+										button.btn.waves-effect.waves-light(type="submit") Load
+									.input-field.col.s12
+										a.btn.waves-effect.waves-light.modal-trigger(href="#create_preset") New
+
+						.row
+							.input-field.col.s12
+								a.modal-trigger(href="#show_networks", data-iface="in0")
+									input#in0(type="text", name="in0", value="<?php echo $ssid[0]; ?>", disabled)
+									label(for="in0") Interface 1
+						.row
+							.input-field.col.s12
+								a.modal-trigger(href="#show_networks", data-iface="in1")
+									input#in1(type="text", name="in1", value="<?php echo $ssid[1]; ?>", disabled)
+									label(for="wl1") Interface 2
+			.col.s12.m6
+				.card
+					.card-content.center 
+						.card-title OUT
+						form(method="post")
+							.row
+								.input-field.col.s12
+									input#ssid(type="text", name="ssid", value="<?php echo $outputNetwork->ssid; ?>")
+									label(for="ssid") Ssid
+								.input-field.col.s12
+									input#pass(type="text", name="pass", value="<?php echo $outputNetwork->password; ?>")
+									label(for="pass") Password
+									input#iface(type="hidden", name="iface", value="out0")
+								.col.s12.center
+									input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
+									button.btn.waves-effect.waves-light(type="submit") UPDATE
+
+	.modal#show_networks
+		.modal-content#networks_content
+			h4 Available networks
+
+		.modal-footer
+			a.modal-action.modal-close.waves-effect.waves-light.btn-flat(href="#!") Close	
+
+	.modal.modal-pass#connect
+		.modal-content
+			h4 Connect
+			form(method="post")
+				.row
+					.input-field.col.s12
+						input#connect_ssid(type="text", name="ssid")
+						input#connect_iface(type="text", name="iface")
+						label(for="connect_ssid") SSID
+					.input-field.col.s12
+						input#pass(type="password", name="pass")
+						label(for="connect_pass") Password
+					.col.s12.center
+						input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
+						button.btn.waves-effect.waves-light(type="submit") Connect
+
+		.modal-footer
+			a.modal-action.modal-close.waves-effect.waves-light.btn-flat(href="#!") Close		
+
+	.modal#create_preset
+		.modal-content
+			h4 Save preset
+			form(method="post", action="ajax/create_preset.php")
+				.row
+					.input-field.col.s12
+						input#preset_name(type="text", name="preset_name")
+						label(for="preset_name") Name
+					.col.s12.center
+						input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
+						button.btn.waves-effect.waves-light(type="submit") Save
+
+		.modal-footer
+			a.modal-action.modal-close.waves-effect.waves-light.btn-flat(href="#!") Close			
+
+
+block script 
+	script(src="components/jquery/dist/jquery.js")
+	script(src="components/materialize/dist/js/materialize.js")
+	script(src="static/js/networks.js")
+	script(src="static/js/main.min.js")
+	:php
+		if(!empty($messages)){
+			echo '<script type="text/javascript">';
+			foreach ($messages as $message) {
+				echo "Materialize.toast('{$message}', 4000);";
+			}
+			echo '</script>';
+		}
+
+						

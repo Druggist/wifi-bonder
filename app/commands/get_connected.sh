@@ -10,8 +10,13 @@ case "$1" in
 		number=$(create_ap --list-clients ap0 | wc -l) 
 		echo $((number - 1))
 	;;
-	
+
 	*) 
-	echo "TODO CLIENTLIST"
+		if [ $(create_ap --list-running | wc -l) -ge 3 ]
+		then
+			create_ap --list-clients ap0
+		else
+			echo "Hotspot not running"
+		fi
 	;;
 esac
