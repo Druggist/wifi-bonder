@@ -1,7 +1,13 @@
 <?php 
-	exec('sudo commands/create_hotspot.sh "'.$_GET["ssid"].'" "'.$_GET["pass"].'"', $out, $res);
-	echo "<br> out: ";
-	var_dump($out);
-	echo "<br> res: ";
-	var_dump($res);
+	if (array_key_exists(1, $argv)) {
+		$ssid = $argv[1];
+		$pass = "";
+		if (array_key_exists(2, $argv)) $pass = $argv[2];
+
+		echo exec('sudo commands/create_hotspot.sh '.$ssid.' '.$pass.' > /dev/null 2>/dev/null &', $out, $res);
+		sleep(10);
+		var_dump($out);
+		var_dump($res);
+	}
+
 ?>

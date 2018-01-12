@@ -52,7 +52,10 @@ block php
 						array_push($messages, "Could not connect to ".Input::get('ssid'));
 					}
 				} elseif (Input::get('iface') == "out0") {
-					exec('sudo php commands/create_hotspot.php?ssid="'.Input::get('ssid').'"&pass="'.Input::get('pass').'"', $out, $res);
+					$com = 'sudo php commands/create_hotspot.php "'.Input::get('ssid').'" '.Input::get('pass').'';
+					echo $com;
+					echo exec('sudo commands/create_hotspot.sh '.Input::get('ssid').' '.Input::get('pass').' > /dev/null 2>/dev/null &', $out, $res);
+					//echo exec($com, $out, $res);
 					//- exec('sudo commands/create_hotspot.sh "'.Input::get('ssid').'" "'.Input::get('pass').'"', $out, $res);
 					//- echo "<br> out: ";
 					//- var_dump($out);
