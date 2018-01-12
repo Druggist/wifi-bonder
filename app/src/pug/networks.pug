@@ -52,18 +52,12 @@ block php
 						array_push($messages, "Could not connect to ".Input::get('ssid'));
 					}
 				} elseif (Input::get('iface') == "out0") {
-					$com = 'sudo php commands/create_hotspot.php "'.Input::get('ssid').'" '.Input::get('pass').'';
-					echo $com;
-					echo exec('sudo commands/create_hotspot.sh '.Input::get('ssid').' '.Input::get('pass').' > /dev/null 2>/dev/null &', $out, $res);
-					//echo exec($com, $out, $res);
-					//- exec('sudo commands/create_hotspot.sh "'.Input::get('ssid').'" "'.Input::get('pass').'"', $out, $res);
-					//- echo "<br> out: ";
-					//- var_dump($out);
-					//- echo "<br> res: ";
-					//- var_dump($res);
+					echo exec('sudo commands/create_hotspot.sh "'.Input::get('ssid').'" "'.Input::get('pass').'" > /dev/null 2>/dev/null &', $out, $res);
+					var_dump($res);
 					if ($db->query('UPDATE `networks` SET `ssid`="'.Input::get('ssid').'", `password`="'.Input::get('pass').'" WHERE networkid='.$userConfig->networkid)->error()) {
 						die("Cannot update output network");
 					}
+					array_push($messages, "Created AP with ssid: ".Input::get('ssid'));
 				} else {
 					die('Incorrect iface name');
 				}
