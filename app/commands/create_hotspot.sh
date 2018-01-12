@@ -9,5 +9,8 @@ if [ "$1" = "" ]
 then
   	echo "ERROR: SSID was not specified."
 	exit 0
+fi
 
-create_ap --daemon "$WLOUT0" bond0 "$1" "$2"
+source $dir/stop_hotspot.sh
+create_ap "$WLOUT0" bond0 "$1" "$2"
+sleep 10s
