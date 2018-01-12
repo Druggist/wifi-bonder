@@ -31,7 +31,7 @@ CREATE TABLE logs (
 	logid            INTEGER PRIMARY KEY AUTO_INCREMENT,
 	type             SMALLINT NOT NULL,
 	description      VARCHAR(255) NOT NULL,
-	userid           INTEGER NOT NULL
+	userid           INTEGER NOT NULL,
 	date             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE networks (
 	ssid                           VARCHAR(255) NOT NULL,
 	password                       VARCHAR(255) NOT NULL,
 	type                           CHAR(1) NOT NULL,
-	networkgroupid                 INTEGER
+	networkgroupid                 INTEGER NULL
 );
 
 CREATE TABLE pastes (
@@ -61,10 +61,11 @@ CREATE TABLE pastes (
 
 CREATE TABLE performances (
 	performanceid        INTEGER PRIMARY KEY AUTO_INCREMENT,
-	uploadspeed          DOUBLE NOT NULL,
 	testdate             DATE NOT NULL,
+	uploadspeed          DOUBLE NOT NULL,
 	downloadspeed        DOUBLE NOT NULL,
-	networkid            INTEGER NOT NULL
+	ping                 DOUBLE NOT NULL,
+	networkgroupid       INTEGER NULL
 );
 
 CREATE TABLE sessions (
@@ -119,8 +120,8 @@ ALTER TABLE pastes
 		REFERENCES users ( userid );
 
 ALTER TABLE performances
-	ADD CONSTRAINT performances_networks_fk FOREIGN KEY ( networkid )
-		REFERENCES networks ( networkid );
+	ADD CONSTRAINT performances_networkgroups_fk FOREIGN KEY ( networkgroupid )
+		REFERENCES networkgroups ( networkgroupid );
 
 ALTER TABLE sessions
 	ADD CONSTRAINT sessions_users_fk FOREIGN KEY ( userid )
