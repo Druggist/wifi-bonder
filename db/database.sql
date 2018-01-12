@@ -61,7 +61,7 @@ CREATE TABLE pastes (
 
 CREATE TABLE performances (
 	performanceid        INTEGER PRIMARY KEY AUTO_INCREMENT,
-	testdate             DATE NOT NULL,
+	testdate             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	uploadspeed          DOUBLE NOT NULL,
 	downloadspeed        DOUBLE NOT NULL,
 	ping                 DOUBLE NOT NULL,

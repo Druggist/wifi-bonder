@@ -8,8 +8,8 @@ if(!$user->isLoggedIn()) {
 }
 
 $db = DB::getInstance();
-if ($db->query('SELECT performances.networkid, ssid, name FROM ((performances LEFT JOIN networks ON performances.networkid = networks.networkid) LEFT JOIN networkgroups ON networks.networkgroupid = networkgroups.networkgroupid) GROUP BY performances.networkid')->error()) {
-	die("Failed to fetch logs");
+if ($db->query('SELECT performances.networkgroupid, name FROM (performances LEFT JOIN networkgroups ON performances.networkgroupid = networkgroups.networkgroupid) GROUP BY performances.networkgroupid')->error()) {
+	die("Failed to fetch performances");
 }
 $testGroups = $db->results();
 
@@ -23,7 +23,7 @@ if(Input::exists('get')) {
 	));   
 
 	if($validation->passed()) { 
-		if ($db->query('SELECT * FROM performances WHERE networkid='.Input::get('id'))->error()) {
+		if ($db->query('SELECT * FROM performances WHERE networkgroupid='.Input::get('id'))->error()) {
 			die("Failed to fetch specified network performances");
 		}
 		$tests = $db->results();
@@ -84,11 +84,11 @@ if(Input::exists('get')) {
                   <div class="input-field col s12 m12 l12">
                     <select id="id" name="id">
                       <option value="" selected disabled><?php foreach($testGroups as $group) {
-	echo '<option value="'.$group->networkid.'">'.$group->ssid.' at preset: '.$group->name.'</option>';
+	echo '<option value="'.$group->networkgroupid.'">'.$group->name.'</option>';
 } ?>
                       </option>
                     </select>
-                    <label>Select network</label>
+                    <label>Select preset</label>
                   </div>
                 </div>
               </form>
@@ -98,11 +98,14 @@ echo '<li>
 		<div class="collapsible-header"><span>'.$test->testdate.'</span></div>
 		<div class="collapsible-body">
 			<div class="wifi row">
-				<div class="performance col s6">
+				<div class="performance col s4">
 					<div class="title">Download</div>'.$test->downloadspeed.' kb/s
 				</div>
-				<div class="performance col s6">
+				<div class="performance col s4">
 					<div class="title">Upload</div>'.$test->uploadspeed.' kb/s
+				</div>
+				<div class="performance col s4">
+					<div class="title">Ping</div>'.$test->ping.' ms
 				</div>
 			</div>
 		</div>

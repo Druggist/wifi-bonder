@@ -71,27 +71,11 @@ if ($userConfig->networkgroupid != null) {
 	}
 	$inputNetworks = $db->results();
 }
-for ($i = 0; $i<count($inputNetworks); $i++) {
-	if ($db->query('SELECT * FROM `performances` WHERE `networkid`='.$inputNetworks[$i]->networkid.' ORDER BY `testdate` DESC LIMIT 1')->error()) {
-		die('Failed to fetch network performance!');
-	}
-	if ($db->count() > 0) {
-		$inputNetworks[$i]->uploadspeed = $db->results()[0]->uploadspeed;
-		$inputNetworks[$i]->downloadspeed = $db->results()[0]->downloadspeed;
-	}
-}
 
 if ($db->query('SELECT `networkid`, `ssid`, `password` FROM `networks` WHERE `networkid`='.$userConfig->networkid.' AND `type`="O"')->error()) {
 	die('Failed to fetch output networks!');
 }
 $outputNetwork=$db->results()[0];
-if ($db->query('SELECT * FROM `performances` WHERE `networkid`='.$outputNetwork->networkid.' ORDER BY `testdate` DESC LIMIT 1')->error()) {
-	die('Failed to fetch network performance!');
-}
-if ($db->count() > 0) {
-	$outputNetwork->uploadspeed = $db->results()[0]->uploadspeed;
-	$outputNetwork->downloadspeed = $db->results()[0]->downloadspeed;
-}
 
 foreach($messages as $error) 
 echo $error
@@ -143,47 +127,11 @@ echo $error
                    <?php if(count($inputNetworks) > 0)
 	echo $inputNetworks[0]->ssid;  ?>
                 </div>
-                <div class="performance col s6">
-                  <div class="title">
-                     <?php if(count($inputNetworks) > 0) {
-	if (property_exists($inputNetworks[0], 'downloadspeed')) {
-		echo 'Download | '.$inputNetworks[0]->downloadspeed.' kb/s';
-	}
-} ?>
-                  </div>
-                </div>
-                <div class="performance col s6">
-                  <div class="title">
-                     <?php if(count($inputNetworks) > 0) {
-	if (property_exists($inputNetworks[0], 'uploadspeed')) {
-		echo 'Upload | '.$inputNetworks[0]->uploadspeed.' kb/s';
-	}
-} ?>
-                  </div>
-                </div>
               </div>
               <div class="wifi row">
                 <div class="ssid center col s12">
                    <?php if(count($inputNetworks) > 1)
 	echo $inputNetworks[1]->ssid; ?>
-                </div>
-                <div class="performance col s6">
-                  <div class="title">
-                     <?php if(count($inputNetworks) > 1) {
-	if (property_exists($inputNetworks[1], 'downloadspeed')) {
-		echo 'Download | '.$inputNetworks[1]->downloadspeed.' kb/s';
-	}
-} ?>
-                  </div>
-                </div>
-                <div class="performance col s6">
-                  <div class="title">
-                     <?php if(count($inputNetworks) > 1) {
-	if (property_exists($inputNetworks[1], 'uploadspeed')) {
-		echo 'Upload | '.$inputNetworks[1]->uploadspeed.' kb/s';
-	}
-} ?>
-                  </div>
                 </div>
               </div>
             </div>
@@ -200,24 +148,6 @@ echo $error
                      <?php echo $outputNetwork->password; ?></span></div>
                 <div class="devices col s12">Connected devices:<span>
                      <?php echo exec('sudo commands/get_connected.sh -n'); ?></span></div>
-                <div class="performance col s6">
-                  <div class="title">
-                     <?php if(count($inputNetworks) > 1) {
-	if (property_exists($inputNetworks[1], 'uploadspeed')) {
-		echo 'Upload | '.$inputNetworks[1]->uploadspeed.' kb/s';
-	}
-} ?>
-                  </div>
-                </div>
-                <div class="performance col s6">
-                  <div class="title">
-                     <?php if(count($inputNetworks) > 1) {
-	if (property_exists($inputNetworks[1], 'downloadspeed')) {
-		echo 'Download | '.$inputNetworks[1]->downloadspeed.' kb/s';
-	}
-} ?>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
