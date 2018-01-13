@@ -6,7 +6,7 @@ USE bonder;
 
 CREATE TABLE allowedmacs (
 	macid              INTEGER PRIMARY KEY AUTO_INCREMENT,
-	mac                CHAR(12) NOT NULL,
+	mac                CHAR(17) NOT NULL,
 	configid           INTEGER NOT NULL
 );
 

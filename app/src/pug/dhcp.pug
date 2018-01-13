@@ -11,6 +11,43 @@ block php
 			Redirect::to('login.php');
 		}
 
+		$db = DB::getInstance();
+
+		if ($db->query('SELECT * FROM configs WHERE userid='.$user->data()->userid)->error()) {
+			die('Failed to get users config!');
+		}
+		$userConfig = $db->results()[0];
+
+		if(Input::exists()) {
+			$validate = new Validate();
+			$validation = $validate->check($_POST, array(
+				'mac' => array(
+					'required' => true,
+					'min' => 17,
+					'max' => 17
+				)));
+			if($validation->passed()) { 
+				if (!$db->insert('allowedmacs', array(
+					'mac' => Input::get('mac'),
+					'configid' => $userConfig->configid
+					))) {
+					die("Could not delete old connection!");
+				} 
+			} else {
+				foreach($validation->errors() as $error) {
+					echo $error;
+				}
+			}
+		}
+
+		if ($db->query('SELECT * FROM allowedmacs WHERE configid='.$userConfig->configid)->error()) {
+			die('Failed to fetch allowed macs.');
+		}
+		$macs = $db->results();
+
+		exec('sudo commands/get_connected.sh', $out) 
+
+
 block body
 	include _navbar
 
@@ -25,21 +62,13 @@ block body
 					.card-content
 						.card-title.center Connected devices
 						ul.collection
-							li.collection-item
-								.connected
-									span TEMP_COMPUTER
-									span 23:23:34:ff:02:4d
-									span 192.168.1.1
-							li.collection-item
-								.connected
-									span TEMP_COMPUTER
-									span 23:23:34:ff:02:4d
-									span 192.168.1.1
-							li.collection-item
-								.connected
-									span TEMP_COMPUTER
-									span 23:23:34:ff:02:4d
-									span 192.168.1.1
+							:php
+								foreach($out as $o) {
+									echo '<li class="collection-item">
+									<div class="connected">'.$o.'</div>
+									</li>';
+				
+								}
 			.col.s12.m6
 				.card
 					.card-content
@@ -54,18 +83,12 @@ block body
 										| On
 
 						ul.collection
-							li.collection-item
-								.connected 23:23:34:ff:02:4d
-									a.secondary-content(href="#!")
-										i.material-icons clear
-							li.collection-item
-								.connected 23:23:34:ff:02:4d
-									a.secondary-content(href="#!")
-										i.material-icons clear
-							li.collection-item
-								.connected 23:23:34:ff:02:4d
-									a.secondary-content(href="#!")
-										i.material-icons clear
+							:php
+								foreach($macs as $mac) {
+									echo '<li class="collection-item">
+									<div class="connected">'.$mac->mac.'<a class="secondary-content" href="ajax/delete_mac.php?id='.$mac->macid.'"><i class="material-icons">clear</i></a></div>
+									</li>';
+								}
 			.col.s12.m6
 				.card
 					.card-content
@@ -77,7 +100,7 @@ block body
 									label(for="mac") MAC
 								.col.s12.center
 									input(type="hidden", name="token", value="<?php echo Token::generate(); ?>")
-									button.btn.waves-effect.waves-light(type="submit") Ban
+									button.btn.waves-effect.waves-light(type="submit") Allow
 
 block script
 	script(src="components/jquery/dist/jquery.min.js")

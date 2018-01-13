@@ -6,6 +6,43 @@ $user = new User();
 if(!$user->isLoggedIn()) {
 	Redirect::to('login.php');
 }
+
+$db = DB::getInstance();
+
+if ($db->query('SELECT * FROM configs WHERE userid='.$user->data()->userid)->error()) {
+	die('Failed to get users config!');
+}
+$userConfig = $db->results()[0];
+
+if(Input::exists()) {
+	$validate = new Validate();
+	$validation = $validate->check($_POST, array(
+		'mac' => array(
+			'required' => true,
+			'min' => 17,
+			'max' => 17
+		)));
+	if($validation->passed()) { 
+		if (!$db->insert('allowedmacs', array(
+			'mac' => Input::get('mac'),
+			'configid' => $userConfig->configid
+			))) {
+			die("Could not delete old connection!");
+		} 
+	} else {
+		foreach($validation->errors() as $error) {
+			echo $error;
+		}
+	}
+}
+
+if ($db->query('SELECT * FROM allowedmacs WHERE configid='.$userConfig->configid)->error()) {
+	die('Failed to fetch allowed macs.');
+}
+$macs = $db->results();
+
+exec('sudo commands/get_connected.sh', $out) 
+
  ?><!DOCTYPE html>
 <html>
   <head>
@@ -49,16 +86,12 @@ if(!$user->isLoggedIn()) {
           <div class="card">
             <div class="card-content">
               <div class="card-title center">Connected devices</div>
-              <ul class="collection">
-                <li class="collection-item">
-                  <div class="connected"><span>TEMP_COMPUTER</span><span>23:23:34:ff:02:4d</span><span>192.168.1.1</span></div>
-                </li>
-                <li class="collection-item">
-                  <div class="connected"><span>TEMP_COMPUTER</span><span>23:23:34:ff:02:4d</span><span>192.168.1.1</span></div>
-                </li>
-                <li class="collection-item">
-                  <div class="connected"><span>TEMP_COMPUTER</span><span>23:23:34:ff:02:4d</span><span>192.168.1.1</span></div>
-                </li>
+              <ul class="collection"><?php foreach($out as $o) {
+	echo '<li class="collection-item">
+	<div class="connected">'.$o.'</div>
+	</li>';
+
+} ?>
               </ul>
             </div>
           </div>
@@ -76,16 +109,11 @@ if(!$user->isLoggedIn()) {
                   </div>
                 </div>
               </div>
-              <ul class="collection">
-                <li class="collection-item">
-                  <div class="connected">23:23:34:ff:02:4d<a class="secondary-content" href="#!"><i class="material-icons">clear</i></a></div>
-                </li>
-                <li class="collection-item">
-                  <div class="connected">23:23:34:ff:02:4d<a class="secondary-content" href="#!"><i class="material-icons">clear</i></a></div>
-                </li>
-                <li class="collection-item">
-                  <div class="connected">23:23:34:ff:02:4d<a class="secondary-content" href="#!"><i class="material-icons">clear</i></a></div>
-                </li>
+              <ul class="collection"><?php foreach($macs as $mac) {
+	echo '<li class="collection-item">
+	<div class="connected">'.$mac->mac.'<a class="secondary-content" href="ajax/delete_mac.php?id='.$mac->macid.'"><i class="material-icons">clear</i></a></div>
+	</li>';
+} ?>
               </ul>
             </div>
           </div>
@@ -102,7 +130,7 @@ if(!$user->isLoggedIn()) {
                   </div>
                   <div class="col s12 center">
                     <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
-                    <button class="btn waves-effect waves-light" type="submit">Ban</button>
+                    <button class="btn waves-effect waves-light" type="submit">Allow</button>
                   </div>
                 </div>
               </form>
