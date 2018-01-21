@@ -33,6 +33,11 @@ if(Input::exists('get')) {
 		exec('sudo commands/connect.sh "in1" "'.$networks[1]->ssid.'" "'.$networks[1]->password.'"', $out, $res);
 		echo "conn 2";
 	}		
+	$db->insert('logs', array(
+				'type' => 0,
+				'description' =>  "Set networkgroup to ".Input::get('networkgroupid'),
+				'userid' => $user->data()->userid
+				));
 	Redirect::to('../networks.php');		
 } else {
 	die("Network group id needed");

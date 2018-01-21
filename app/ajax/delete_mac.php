@@ -20,6 +20,11 @@ if(Input::exists('get')){
 		if($db->query("DELETE FROM allowedmacs WHERE macid = $id")->error()) {
 		    die('Deletion error!');
 		}
+		$db->insert('logs', array(
+					'type' => 0,
+					'description' =>  "Deleted mac with id ".$id,
+					'userid' => $user->data()->userid
+					));
 	} else {
 		foreach($validation->errors() as $error) {
 			array_push($messages, $error);

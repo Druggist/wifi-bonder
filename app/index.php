@@ -30,7 +30,7 @@ if(Input::exists()) {
 				'required' => true,
 				'min' => 6, 
 				'max' => 50,
-				'matches' => 'newpass'
+				'matches' => 'newpass' 
 			) 
 		));   
 

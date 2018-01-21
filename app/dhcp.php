@@ -29,6 +29,11 @@ if(Input::exists()) {
 			))) {
 			die("Could not delete old connection!");
 		} 
+		$db->insert('logs', array(
+					'type' => 0,
+					'description' =>  "Addeed mac to allowed ".Input::get('mac'),
+					'userid' => $user->data()->userid
+					));
 	} else {
 		foreach($validation->errors() as $error) {
 			echo $error;

@@ -44,16 +44,26 @@ if(Input::exists()) {
 					}
 				}
 				array_push($messages, "Connected to ".Input::get('ssid')." on interface ".Input::get('iface'));
+				$db->insert('logs', array(
+							'type' => 0,
+							'description' =>  "Connected to ".Input::get('ssid')." on interface ".Input::get('iface'),
+							'userid' => $user->data()->userid
+							));
 			} else {
 				array_push($messages, "Could not connect to ".Input::get('ssid'));
 			}
 		} elseif (Input::get('iface') == "out0") {
 			echo exec('sudo commands/create_hotspot.sh "'.Input::get('ssid').'" "'.Input::get('pass').'" > /dev/null 2>/dev/null &', $out, $res);
-			var_dump($res);
 			if ($db->query('UPDATE `networks` SET `ssid`="'.Input::get('ssid').'", `password`="'.Input::get('pass').'" WHERE networkid='.$userConfig->networkid)->error()) {
 				die("Cannot update output network");
 			}
+			
 			array_push($messages, "Created AP with ssid: ".Input::get('ssid'));
+			$db->insert('logs', array(
+						'type' => 0,
+						'description' => "Created AP with ssid: ".Input::get('ssid'),
+						'userid' => $user->data()->userid
+						));
 		} else {
 			die('Incorrect iface name');
 		}
@@ -92,6 +102,11 @@ if($userConfig->networkgroupid != null) {
 			die('Failed to update user config!');
 		}
 		$userConfig->networkgroupid=null;
+		$db->insert('logs', array(
+					'type' => 1,
+					'description' => "Could not connect to netwroks from preset, networkgroupid set to null",
+					'userid' => $user->data()->userid
+					));
 		array_push($messages, "Could not connect to netwroks from preset.");
 	}
 } ?><!DOCTYPE html>

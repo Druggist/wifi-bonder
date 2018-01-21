@@ -23,6 +23,11 @@
 		if ($db->query('UPDATE configs SET networkgroupid='.$networkGroupId.' WHERE userid='.$user->data()->userid)->error()) {
 			die('Cannot update user config');
 		}
+		$db->insert('logs', array(
+					'type' => 0,
+					'description' => "Created preset ".Input::get('preset_name'),
+					'userid' => $user->data()->userid
+					));
 		Redirect::to('../networks.php');		
 	} else {
 		die("Network group id needed");

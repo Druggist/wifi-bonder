@@ -43,6 +43,11 @@ If(Input::exists()){
 					'userid' => $userid
 				))) {
 					Session::flash('success', 'Paste created!');
+					$db->insert('logs', array(
+								'type' => 0,
+								'description' => "Created paste with title ".$title,
+								'userid' => $user->data()->userid
+								));
 					Redirect::to('pastes.php');
 				} else {
 					array_push($messages, "Cannot add paste!");
